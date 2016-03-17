@@ -1,4 +1,4 @@
-package com.user.hilo.activity.view;
+package com.user.hilo.activity.view.i;
 
 /**
  * Created by Administrator on 2016/3/16.

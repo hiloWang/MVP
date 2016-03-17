@@ -1,4 +1,4 @@
-package com.user.hilo.activity.view.iml;
+package com.user.hilo.activity.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,9 +20,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.user.hilo.R;
-import com.user.hilo.activity.presenter.MainPresenter;
-import com.user.hilo.activity.presenter.iml.MainPresenterIml;
-import com.user.hilo.activity.view.MainView;
+import com.user.hilo.activity.presenter.MainPresenterIml;
+import com.user.hilo.activity.presenter.i.MainPresenter;
+import com.user.hilo.activity.view.i.MainView;
 
 import java.util.List;
 

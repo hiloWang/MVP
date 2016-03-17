@@ -1,4 +1,4 @@
-package com.user.hilo.activity.view;
+package com.user.hilo.activity.view.i;
 
 import java.util.List;
 

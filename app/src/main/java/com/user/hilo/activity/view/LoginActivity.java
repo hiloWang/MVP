@@ -1,4 +1,4 @@
-package com.user.hilo.activity.view.iml;
+package com.user.hilo.activity.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -16,9 +16,9 @@ import android.widget.Toast;
 import com.user.hilo.MyApplication;
 import com.user.hilo.R;
 import com.user.hilo.activity.base.BaseToolbarActivity;
-import com.user.hilo.activity.presenter.LoginPresenter;
-import com.user.hilo.activity.presenter.iml.LoginPresenterIml;
-import com.user.hilo.activity.view.LoginView;
+import com.user.hilo.activity.presenter.LoginPresenterIml;
+import com.user.hilo.activity.presenter.i.LoginPresenter;
+import com.user.hilo.activity.view.i.LoginView;
 import com.user.hilo.interfaces.OnNoDoubleClickListener;
 import com.user.hilo.view.LoginButton;
 

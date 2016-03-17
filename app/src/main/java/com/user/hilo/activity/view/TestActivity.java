@@ -1,4 +1,4 @@
-package com.user.hilo.activity.view.iml;
+package com.user.hilo.activity.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
