@@ -89,9 +89,18 @@ public class MainActivity extends AppCompatActivity
         presenter.onResume();
     }
 
+    /**
+     * 在跳转时,如果当前activity没有finish,那么释放资源要在onPause里,反之则要在onStop里
+     */
     @Override
     protected void onPause() {
         super.onPause();
+        if (animator != null) {
+            animator.cancel();
+            animator = null;
+        }
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(false);
         presenter.onPause();
     }
 
@@ -103,12 +112,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        if (animator != null) {
-            animator.cancel();
-            animator = null;
-        }
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
