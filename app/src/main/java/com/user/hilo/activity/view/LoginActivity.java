@@ -93,7 +93,6 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     @Override
     protected void onStop() {
         super.onStop();
-        mBtnCommit.endCustomAnimation();
     }
 
     @Override
@@ -130,7 +129,7 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     public void navigateToHome() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-//        finish();
+        finish();
     }
 
     @Override
