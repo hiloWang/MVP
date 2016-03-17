@@ -12,4 +12,7 @@ public interface MainPresenter {
     void onPause();
 
     void onItemClicked(int position);
+
+    void addItem();
+
 }

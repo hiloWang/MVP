@@ -12,4 +12,7 @@ public interface MainModel {
     void OnError();
 
     void onDestroy();
+
+    String getItem();
+
 }

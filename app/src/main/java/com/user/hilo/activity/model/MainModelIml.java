@@ -7,6 +7,7 @@ import com.user.hilo.activity.interfaces.OnFinishedListener;
 import com.user.hilo.activity.model.i.MainModel;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,6 +40,11 @@ public class MainModelIml implements MainModel {
         repleaseResource();
     }
 
+    @Override
+    public String getItem() {
+        return "add item";
+    }
+
     private void repleaseResource() {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
@@ -48,7 +54,7 @@ public class MainModelIml implements MainModel {
     }
 
     private List<String> createArrayList() {
-        return Arrays.asList(
+        return new ArrayList<>(Arrays.asList(
                 "Item 1",
                 "Item 2",
                 "Item 3",
@@ -59,7 +65,7 @@ public class MainModelIml implements MainModel {
                 "Item 8",
                 "Item 9",
                 "Item 10"
-        );
+        ));
     }
 
     private Runnable requestDataRunnable = new Runnable() {

@@ -1,5 +1,6 @@
 package com.user.hilo.activity.view;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,12 +11,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.user.hilo.R;
 import com.user.hilo.activity.presenter.MainPresenterIml;
@@ -23,6 +27,7 @@ import com.user.hilo.activity.presenter.i.MainPresenter;
 import com.user.hilo.activity.view.i.MainView;
 import com.user.hilo.adapter.MainRecyclerAdapter;
 import com.user.hilo.interfaces.RecyclerViewOnItemClickListener;
+import com.user.hilo.utils.AnimUtils;
 import com.user.hilo.view.pulltorefresh.PullRefreshLayout;
 
 import java.util.List;
@@ -30,6 +35,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator;
 
 public class MainActivity extends AppCompatActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, RecyclerViewOnItemClickListener {
@@ -53,6 +61,9 @@ public class MainActivity extends AppCompatActivity
     private Context context;
     private MainPresenter presenter;
     private MainRecyclerAdapter adapter;
+    private Animator animator;
+    private int lastVisibleItem;
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +103,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
+        if (animator != null) {
+            animator.cancel();
+            animator = null;
+        }
     }
 
     @Override
@@ -129,11 +144,16 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent com.user.hilo.activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            //noinspection SimplifiableIfStatement
+            case R.id.action_settings:
+                break;
+            case R.id.action_add:
+                presenter.addItem();
+                break;
+            case R.id.action_del:
+                adapter.delItem(0);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -175,6 +195,25 @@ public class MainActivity extends AppCompatActivity
 
     private void initEvents() {
         mNavView.setNavigationItemSelectedListener(this);
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
+                    // 当滚动到最后一条时的逻辑处理
+                    Toast.makeText(context, "没有数据可加载", Toast.LENGTH_SHORT).show();
+                } else if (mLinearLayoutManager.findFirstVisibleItemPosition() == 0) {
+
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (recyclerView != null && recyclerView.getChildCount() > 0)
+                    lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
+            }
+        });
     }
 
     @OnClick({R.id.fab})
@@ -202,10 +241,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setItems(List<String> items) {
         if (adapter == null) {
+            mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            mRecyclerView.setLayoutManager(mLinearLayoutManager);
             adapter = new MainRecyclerAdapter(this);
             adapter.updateItems(items);
             adapter.setRecyclerOnItemClickedListener(this);
-            mRecyclerView.setAdapter(adapter);
+            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
+            ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
+            // false: 即使是已缓存的数据 也会有动画, 默认是true
+            // scaleAdapter.setFirstOnly(false);
+            // 带震动的动画
+            scaleAdapter.setInterpolator(new OvershootInterpolator());
+            mRecyclerView.setItemAnimator(new ScaleInBottomAnimator());
+            mRecyclerView.setAdapter(scaleAdapter);
         } else {
             adapter.updateItems(items, true);
         }
@@ -217,8 +265,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void addItem(String data, int position) {
+        adapter.addItem(data, position);
+        mRecyclerView.scrollToPosition(0);
+    }
+
+    @Override
     public void onItemClicked(View view, int position) {
         presenter.onItemClicked(position);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            animator = AnimUtils.attrCreateCircularReveal(view, 1000);
+        }
     }
 
     @Override
