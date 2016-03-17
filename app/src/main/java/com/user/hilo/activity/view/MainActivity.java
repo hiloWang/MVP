@@ -292,8 +292,6 @@ public class MainActivity extends AppCompatActivity
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             animator = AnimUtils.attrCreateCircularReveal(view, 1000);
         }
-        Intent intent = new Intent(this, TestActivity.class);
-        startActivity(intent);
     }
 
     @Override
