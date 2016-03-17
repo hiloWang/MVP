@@ -2,7 +2,6 @@ package com.user.hilo.activity.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.user.hilo.R;
@@ -16,8 +15,6 @@ import butterknife.ButterKnife;
  */
 public class TestActivity extends BaseToolbarActivity {
 
-    @Bind(R.id.listView)
-    ListView mListView;
     @Bind(R.id.progressBar)
     ProgressBar mProgressBar;
     @Override

@@ -26,6 +26,12 @@
     <color name="refresh_progress_2">#e91e63</color>
     <color name="refresh_progress_3">#3f51b5</color>
 
+    <!-- pulltorefresh -->
+    <color name="pulltorefresh_red">#FFC93437</color>
+    <color name="pulltorefresh_blue">#00B0FF</color>
+    <color name="pulltorefresh_yellow">#FFF7D23E</color>
+    <color name="pulltorefresh_green">#FF34A350</color>
+
     <!-- PorgressButton -->
     <color name="cpb_grey">#ffdedede</color>
     <color name="cpb_blue">#ff0099cc</color>

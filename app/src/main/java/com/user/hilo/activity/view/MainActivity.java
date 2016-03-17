@@ -10,19 +10,20 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.user.hilo.R;
 import com.user.hilo.activity.presenter.MainPresenterIml;
 import com.user.hilo.activity.presenter.i.MainPresenter;
 import com.user.hilo.activity.view.i.MainView;
+import com.user.hilo.adapter.MainRecyclerAdapter;
+import com.user.hilo.interfaces.RecyclerViewOnItemClickListener;
+import com.user.hilo.view.pulltorefresh.PullRefreshLayout;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
-        implements MainView, NavigationView.OnNavigationItemSelectedListener, AdapterView.OnItemClickListener {
+        implements MainView, NavigationView.OnNavigationItemSelectedListener, RecyclerViewOnItemClickListener {
 
 
     @Bind(R.id.fab)
@@ -44,12 +45,14 @@ public class MainActivity extends AppCompatActivity
     Toolbar mToolbar;
     @Bind(R.id.progressBar)
     ProgressBar mProgressBar;
-    @Bind(R.id.listView)
-    ListView mListView;
+    @Bind(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+    @Bind(R.id.swipe_refresh_layout)
+    PullRefreshLayout mSwipeRefreshLayout;
 
     private Context context;
     private MainPresenter presenter;
-
+    private MainRecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +174,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initEvents() {
-        mListView.setOnItemClickListener(this);
         mNavView.setNavigationItemSelectedListener(this);
     }
 
@@ -188,23 +190,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
-        mListView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
-        mListView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    ArrayAdapter adapter;
     @Override
     public void setItems(List<String> items) {
         if (adapter == null) {
-            adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, items);
-            mListView.setAdapter(adapter);
+            adapter = new MainRecyclerAdapter(this);
+            adapter.updateItems(items);
+            adapter.setRecyclerOnItemClickedListener(this);
+            mRecyclerView.setAdapter(adapter);
         } else {
-            adapter.notifyDataSetChanged();
+            adapter.updateItems(items, true);
         }
     }
 
@@ -214,8 +217,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClicked(View view, int position) {
         presenter.onItemClicked(position);
+    }
+
+    @Override
+    public void onItemLongClicked(View view, int position) {
         if (position + 1 == 1) {
             Intent intent = new Intent(this, TestActivity.class);
             startActivity(intent);
