@@ -1,0 +1,39 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <!-- CusomLight 使用material主题的时候，必须设定targetSdkVersion = 21，否则界面看起来是模糊的 -->
+    <style name="CusomLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Actionbar color -->
+        <item name="colorPrimary">#FF80AB</item>
+        <!--Status bar color-->
+        <item name="colorPrimaryDark">#80FF80AB</item>
+        <!-- Status bar color API 21 -->
+        <!--<item name="android:statusBarColor">#FF80AB</item>-->
+        <!--Window color-->
+        <!--<item name="android:windowBackground">@color/dim_foreground_material_dark</item>-->
+        <!-- colorAccent: 各控制元件(如：check box、switch 或是 radoi) 被勾选 (checked) 或是选定 (selected) 的颜色。-->
+        <item name="colorAccent">@color/colorAccent</item>
+        <!-- Remove the change account button 注释后则开启 navigation账号 button 按钮, 点击切换账号 -->
+        <!--<item name="singleAccount">true</item>-->
+        <!-- colorControlNormal: 各控制元件的预设颜色。-->
+        <!--<item name="android:colorControlNormal"></item>-->
+        <!-- navigationBarColor: 导航栏的背景色，但只能用在 API Level 21 (Android 5) 以上的版本-->
+        <!--<item name="android:navigationBarColor"></item>-->
+        <!--正常状态下字体颜色和icon颜色-->
+        <item name="android:textColorPrimary">@color/cpb_white</item>
+    </style>
+
+</resources>
