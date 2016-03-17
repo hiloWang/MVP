@@ -24,10 +24,7 @@ public class MainPresenterIml implements MainPresenter, OnFinishedListener {
 
     @Override
     public void onResume() {
-        if (mainView != null) {
-            mainView.showProgress();
-        }
-        model.FindItems(this);
+
     }
 
     @Override
@@ -62,6 +59,14 @@ public class MainPresenterIml implements MainPresenter, OnFinishedListener {
         if (mainView != null) {
             mainView.requestDataRefreshFinish(model.getItems());
         }
+    }
+
+    @Override
+    public void requestDataFirst() {
+        if (mainView != null) {
+            mainView.showProgress();
+        }
+        model.FindItems(this);
     }
 
     @Override

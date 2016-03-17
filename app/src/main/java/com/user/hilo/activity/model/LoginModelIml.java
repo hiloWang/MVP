@@ -40,7 +40,7 @@ public class LoginModelIml implements LoginModel {
                     // login error
                     // onLoginFinishedListener.validateStatus(SERVER_ERROR);
                 }
-            }, 2 * 1000);
+            }, 2 * 100);
         }
     }
 

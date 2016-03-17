@@ -21,7 +21,7 @@
         <!-- colorControlNormal: 各控制元件的预设颜色。-->
         <!--<item name="android:colorControlNormal"></item>-->
         <!-- navigationBarColor: 导航栏的背景色，但只能用在 API Level 21 (Android 5) 以上的版本-->
-        <item name="android:navigationBarColor">@color/design_bgcolor</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <!--正常状态下字体颜色和icon颜色-->
         <item name="android:textColorPrimary">@color/cpb_white</item>
     </style>

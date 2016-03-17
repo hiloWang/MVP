@@ -259,7 +259,7 @@ public class AnimUtils {
 
     /**
      * 烧纸
-     * @param animator
+     * @param duration
      * @param v
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

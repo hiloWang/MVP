@@ -1,8 +1,10 @@
 package com.user.hilo.activity.view;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.user.hilo.R;
@@ -28,6 +31,7 @@ import com.user.hilo.activity.view.i.MainView;
 import com.user.hilo.adapter.MainRecyclerAdapter;
 import com.user.hilo.interfaces.RecyclerViewOnItemClickListener;
 import com.user.hilo.utils.AnimUtils;
+import com.user.hilo.utils.UIUtils;
 import com.user.hilo.view.pulltorefresh.PullRefreshLayout;
 
 import java.util.List;
@@ -42,6 +46,9 @@ import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator;
 public class MainActivity extends AppCompatActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, RecyclerViewOnItemClickListener {
 
+    private static final int ANIM_DURATION_TOOLBAR = 300;
+    private static final int ANIM_DURATION_FAB = 400;
+    private static final int DEL_RECYCLER_ADAPTER_ITEM_POSITION = 0;
 
     @Bind(R.id.fab)
     FloatingActionButton mFab;
@@ -57,6 +64,10 @@ public class MainActivity extends AppCompatActivity
     RecyclerView mRecyclerView;
     @Bind(R.id.swipe_refresh_layout)
     PullRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.del)
+    TextView mDel;
+    @Bind(R.id.add)
+    TextView mAdd;
 
     private Context context;
     private MainPresenter presenter;
@@ -64,10 +75,13 @@ public class MainActivity extends AppCompatActivity
     private Animator animator;
     private int lastVisibleItem;
     private LinearLayoutManager mLinearLayoutManager;
+    private boolean pendingIntroAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 如果配置了styles里面自定义activity过度平移动画 则需要打开注释
+//        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         context = this;
@@ -76,6 +90,10 @@ public class MainActivity extends AppCompatActivity
         initEvents();
 
         presenter = new MainPresenterIml(this);
+
+        if (savedInstanceState == null) {
+            pendingIntroAnimation = true;
+        }
     }
 
     @Override
@@ -139,8 +157,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_settings);
+
+        if (pendingIntroAnimation) {
+            pendingIntroAnimation = false;
+            startIntroAnimation();
+        }
         return true;
     }
 
@@ -152,12 +177,6 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
             //noinspection SimplifiableIfStatement
             case R.id.action_settings:
-                break;
-            case R.id.action_add:
-                presenter.addItem();
-                break;
-            case R.id.action_del:
-                adapter.delItem(0);
                 break;
         }
 
@@ -195,7 +214,6 @@ public class MainActivity extends AppCompatActivity
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
-        mToolbar.setTitle("");
         mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
             @Override
@@ -227,16 +245,6 @@ public class MainActivity extends AppCompatActivity
                     lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
             }
         });
-    }
-
-    @OnClick({R.id.fab})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.fab:
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                break;
-        }
     }
 
     @Override
@@ -292,7 +300,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemClicked(View view, int position) {
         presenter.onItemClicked(position);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             animator = AnimUtils.attrCreateCircularReveal(view, 1000);
         }
     }
@@ -302,6 +310,61 @@ public class MainActivity extends AppCompatActivity
         if (position + 1 == 1) {
             Intent intent = new Intent(this, TestActivity.class);
             startActivity(intent);
+        }
+    }
+
+    private void startIntroAnimation() {
+        mFab.setTranslationY(2 * getResources().getDimensionPixelOffset(R.dimen.btn_fab_size));
+        int actionbarSize = UIUtils.dpToPx(56, getResources());
+        mToolbar.setTranslationY(-actionbarSize);
+        mAdd.setTranslationY(-actionbarSize);
+        mDel.setTranslationY(-actionbarSize);
+
+        mToolbar.animate()
+                .translationY(0)
+                .setDuration(ANIM_DURATION_TOOLBAR)
+                .setStartDelay(300);
+
+        mAdd.animate()
+                .translationY(0)
+                .setDuration(ANIM_DURATION_TOOLBAR)
+                .setStartDelay(400);
+
+        mDel.animate()
+                .translationY(0)
+                .setDuration(ANIM_DURATION_TOOLBAR)
+                .setStartDelay(500)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mFab.animate()
+                                .translationY(0)
+                                .setInterpolator(new OvershootInterpolator(1.f))
+                                .setStartDelay(25)
+                                .setDuration(ANIM_DURATION_FAB)
+                                .start();
+
+                        presenter.requestDataFirst();
+
+                    }
+                }).start(); // 1.调用setListener同时, 千万不要忘了.start(); 2.当时找不到del图标是因为translationY忘记设置回来了^^
+
+
+    }
+
+    @OnClick({R.id.del, R.id.add, R.id.fab})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.del:
+                adapter.delItem(DEL_RECYCLER_ADAPTER_ITEM_POSITION);
+                break;
+            case R.id.add:
+                presenter.addItem();
+                break;
+            case R.id.fab:
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                break;
         }
     }
 }

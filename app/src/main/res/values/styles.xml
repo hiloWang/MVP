@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -34,6 +34,25 @@
         <!--<item name="android:navigationBarColor"></item>-->
         <!--正常状态下字体颜色和icon颜色-->
         <item name="android:textColorPrimary">@color/cpb_white</item>
+        <!-- Activity 自定义过渡动画-->
+        <!--<item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>-->
+        <!--<item name="android:windowEnterTransition" tools:targetApi="lollipop">@android:transition/explode</item>-->
+        <!--<item name="android:windowExitTransition" tools:targetApi="lollipop">@android:transition/fade</item>-->
+        <!-- 指定shared element transitions -->
+        <!--<item name="android:windowSharedElementEnterTransition" tools:targetApi="lollipop">@android:transition/slide_left</item>-->
+        <!--<item name="android:windowSharedElementExitTransition" tools:targetApi="lollipop">@android:transition/slide_bottom</item>-->
     </style>
-
+    <!-- toolbar标题样式 -->
+    <style name="toolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">14sp</item>
+    </style>
+    <!-- toolbar菜单样式 -->
+    <style name="toolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="actionMenuTextAppearance">@style/ToolbarMenuTextSize</item>
+    </style>
+    <!-- toolbar菜单文字尺寸 -->
+    <style name="ToolbarMenuTextSize" parent="@style/TextAppearance.AppCompat.Menu">
+        <item name="android:textSize">10sp</item>
+    </style>
 </resources>

@@ -4,7 +4,7 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".activity.view.MainActivity">
 
-    <item android:id="@+id/action_add"
+    <!--<item android:id="@+id/action_add"
           android:orderInCategory="80"
           android:showAsAction="ifRoom|withText"
           android:title="add"/>
@@ -12,10 +12,11 @@
     <item android:id="@+id/action_del"
           android:orderInCategory="90"
           android:showAsAction="ifRoom|withText"
-          android:title="del"/>
+          android:title="del"/>-->
 
     <item android:id="@+id/action_settings"
           android:orderInCategory="100"
           android:title="@string/action_settings"
+          android:visible="false"
           app:showAsAction="never"/>
 </menu>

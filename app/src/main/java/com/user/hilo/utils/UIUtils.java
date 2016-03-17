@@ -181,7 +181,6 @@ public class UIUtils {
         }
     }
 
-
     /**
      * Convert Dp to Pixel
      */

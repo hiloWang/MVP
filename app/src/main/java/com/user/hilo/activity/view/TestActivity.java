@@ -6,6 +6,7 @@ import android.widget.ProgressBar;
 
 import com.user.hilo.R;
 import com.user.hilo.activity.base.BaseToolbarActivity;
+import com.user.hilo.utils.UIUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,6 +18,7 @@ public class TestActivity extends BaseToolbarActivity {
 
     @Bind(R.id.progressBar)
     ProgressBar mProgressBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +26,21 @@ public class TestActivity extends BaseToolbarActivity {
         ButterKnife.bind(this);
 
         initViews();
+        initAnimation();
+    }
+
+    private void initAnimation() {
+        int actionbarSize = UIUtils.dpToPx(56, getResources());
+        toolbar.setTranslationY(-actionbarSize);
+        toolbarTitle.setTranslationY(-actionbarSize);
+        toolbar.animate()
+                .translationY(0)
+                .setDuration(400)
+                .setStartDelay(400);
+        toolbarTitle.animate()
+                .translationY(0)
+                .setDuration(400)
+                .setStartDelay(500);
     }
 
     private void initViews() {

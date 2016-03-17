@@ -11,21 +11,26 @@ import android.widget.TextView;
 
 import com.user.hilo.R;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Administrator on 2016/3/16.
  */
 class ToolbarHelper {
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.toolbarTitle)
+    TextView toolbarTitle;
     private Context mContext;
     private FrameLayout baseContentView;
     private View constomView;
-    private Toolbar toolbar;
-    private TextView toolbarTitle;
     private LayoutInflater mLayoutInflater;
 
     private static int[] ATTRS = {
-        R.attr.windowActionBarOverlay,
-        R.attr.actionBarSize
+            R.attr.windowActionBarOverlay,
+            R.attr.actionBarSize
     };
 
     ToolbarHelper(Context context, int layoutResID) {
@@ -63,8 +68,7 @@ class ToolbarHelper {
 
     private void initToolbar() {
         View toolbarView = mLayoutInflater.inflate(R.layout.toolbar, baseContentView);
-        toolbar = (Toolbar) toolbarView.findViewById(R.id.toolbar);
-        toolbarTitle = (TextView) toolbarView.findViewById(R.id.toolbarTitle);
+        ButterKnife.bind(this, toolbarView);
         toolbar.setTitle("");
     }
 

@@ -1,14 +1,10 @@
 package com.user.hilo.activity.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -31,9 +27,6 @@ import butterknife.OnClick;
  */
 public class LoginActivity extends BaseToolbarActivity implements LoginView, LoginButton.OnSendClickListener {
 
-    private static final int ANIM_DURATION_TOOLBAR = 300;
-    private Context context;
-
     @Bind(R.id.username)
     EditText mUsername;
     @Bind(R.id.password)
@@ -50,7 +43,6 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        context = this;
 
         initViews();
         initEvents();
@@ -157,47 +149,5 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
 
     private void validationError() {
         mBtnCommit.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake_error));
-    }
-
-    private void startIntroAnimation() {
-//        int actionbarSize = UIUtils.dpToPx(R.dimen.status_bar_height, getResources());
-        int actionbarSize = 0;
-        toolbar.setTranslationY(-actionbarSize);
-        toolbarTitle.setTranslationY(-actionbarSize);
-        toolbar.animate()
-                .translationY(0)
-                .setDuration(ANIM_DURATION_TOOLBAR)
-                .setStartDelay(300);
-        toolbarTitle.animate()
-                .translationY(0)
-                .setDuration(ANIM_DURATION_TOOLBAR)
-                .setStartDelay(400);
-
-        final float translateX = mUsername.getTranslationX();
-        mUsername.setTranslationX(-actionbarSize);
-        mPassword.setTranslationX(-actionbarSize);
-        mBtnCommit.setTranslationX(-actionbarSize);
-        mUsername.animate()
-                .translationX(translateX)
-                .setDuration(ANIM_DURATION_TOOLBAR)
-                .setStartDelay(500)
-                .start();
-        mPassword.animate()
-                .translationX(translateX)
-                .setDuration(ANIM_DURATION_TOOLBAR)
-                .setStartDelay(600)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        mBtnCommit.animate()
-                                .translationX(translateX)
-                                .setInterpolator(new OvershootInterpolator(1.f))
-                                .setStartDelay(300)
-                                .setDuration(ANIM_DURATION_TOOLBAR)
-                                .start();
-                    }
-                })
-                .start();
-
     }
 }
