@@ -41,8 +41,19 @@ public class MainModelIml implements MainModel {
     }
 
     @Override
-    public String getItem() {
+    public String getData() {
         return "add item";
+    }
+
+    @Override
+    public List<String> getItems() {
+        return new ArrayList<>(Arrays.asList(
+                "New Item A",
+                "New Item B",
+                "New Item C",
+                "New Item D",
+                "New Item E"
+        ));
     }
 
     private void repleaseResource() {

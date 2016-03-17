@@ -107,6 +107,8 @@ public class MainActivity extends AppCompatActivity
             animator.cancel();
             animator = null;
         }
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -191,6 +193,14 @@ public class MainActivity extends AppCompatActivity
         mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         mToolbar.setTitle("");
+        mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefreshing() {
+                presenter.requestDataRefresh();
+            }
+        });
+        mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
     }
 
     private void initEvents() {
@@ -271,11 +281,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void requestDataRefreshFinish(List<String> items) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        adapter.updateItems(items, false);
+    }
+
+    @Override
     public void onItemClicked(View view, int position) {
         presenter.onItemClicked(position);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             animator = AnimUtils.attrCreateCircularReveal(view, 1000);
         }
+        Intent intent = new Intent(this, TestActivity.class);
+        startActivity(intent);
     }
 
     @Override

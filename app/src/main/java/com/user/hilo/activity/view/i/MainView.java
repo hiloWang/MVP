@@ -17,4 +17,6 @@ public interface MainView {
 
     void addItem(String data, int position);
 
+    void requestDataRefreshFinish(List<String> items);
+
 }

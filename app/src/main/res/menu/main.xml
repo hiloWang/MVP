@@ -6,12 +6,12 @@
 
     <item android:id="@+id/action_add"
           android:orderInCategory="80"
-          android:showAsAction="ifRoom"
+          android:showAsAction="ifRoom|withText"
           android:title="add"/>
 
     <item android:id="@+id/action_del"
           android:orderInCategory="90"
-          android:showAsAction="ifRoom"
+          android:showAsAction="ifRoom|withText"
           android:title="del"/>
 
     <item android:id="@+id/action_settings"

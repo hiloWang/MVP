@@ -53,7 +53,14 @@ public class MainPresenterIml implements MainPresenter, OnFinishedListener {
     @Override
     public void addItem() {
         if (mainView != null) {
-            mainView.addItem(model.getItem(), 0);
+            mainView.addItem(model.getData(), 0);
+        }
+    }
+
+    @Override
+    public void requestDataRefresh() {
+        if (mainView != null) {
+            mainView.requestDataRefreshFinish(model.getItems());
         }
     }
 

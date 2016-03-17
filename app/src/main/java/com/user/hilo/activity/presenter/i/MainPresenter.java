@@ -15,4 +15,5 @@ public interface MainPresenter {
 
     void addItem();
 
+    void requestDataRefresh();
 }
