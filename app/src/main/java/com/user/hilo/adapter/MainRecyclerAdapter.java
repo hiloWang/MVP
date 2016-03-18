@@ -208,7 +208,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             return entity;
         }
 
-
         public void bindData(Context context, MainEntity data, int position) {
             entity = data;
             mTvFeedTitle.setText(data.getTitleSubjectName());

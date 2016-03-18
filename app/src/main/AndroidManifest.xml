@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/CusomLight">
         <activity
-            android:name=".activity.view.MainActivity"
+            android:name=".activity.view.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.view.TestActivity"/>
-       <!-- <activity android:name=".activity.view.MainActivity"/>-->
+        <activity android:name=".activity.view.MainActivity"/>
     </application>
 
 </manifest>

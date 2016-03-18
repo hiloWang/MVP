@@ -56,8 +56,8 @@ public class MainModelIml implements MainModel {
     public List<MainEntity> getItems() {
         List<MainEntity> entities = new ArrayList<>();
         entities.addAll(Arrays.asList(
-                new MainEntity("A", 0, false, mipmap[7]),
-                new MainEntity("B", 0, false, mipmap[6]),
+                new MainEntity("A", 0, false, mipmap[(int) (Math.random() * 8)]),
+                new MainEntity("B", 0, false, mipmap[(int) (Math.random() * 8)]),
                 new MainEntity("C", 0, false, mipmap[5]),
                 new MainEntity("D", 0, false, mipmap[4]),
                 new MainEntity("E", 0, false, mipmap[3]),

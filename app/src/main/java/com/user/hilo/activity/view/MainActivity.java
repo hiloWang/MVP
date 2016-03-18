@@ -299,7 +299,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void requestDataRefreshFinish(List<? extends Object> items) {
         mSwipeRefreshLayout.setRefreshing(false);
-        adapter.updateItems((List<MainEntity>) items, true);
+        adapter.updateItems((List<MainEntity>) items, false);
     }
 
     @Override
