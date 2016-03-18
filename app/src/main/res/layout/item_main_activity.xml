@@ -96,8 +96,6 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/ic_heart_small_blue"/>
 
-                <!-- android:inAnimation="@anim/slide_in_likes_counter"
-                    android:outAnimation="@anim/slide_out_likes_counter"-->
                 <TextSwitcher
                     android:id="@+id/tsLikesCounter"
                     android:layout_width="wrap_content"
