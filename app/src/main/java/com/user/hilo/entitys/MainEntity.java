@@ -7,13 +7,42 @@ import java.io.Serializable;
  */
 public class MainEntity implements Serializable {
 
-    private String title;
+    private String titleSubjectName;
+    public int likesCount;
+    private boolean isLiked;
+    private int imageMipmap;
 
-    public String getTitle() {
-        return title;
+    public MainEntity() {
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public MainEntity(String titleSubjectName, int likesCount, boolean isLiked, int imageMipmap) {
+        this.titleSubjectName = titleSubjectName;
+        this.likesCount = likesCount;
+        this.isLiked = isLiked;
+        this.imageMipmap = imageMipmap;
+    }
+
+    public int getImageMipmap() {
+        return imageMipmap;
+    }
+
+    public void setImageUrl(int imageMipmap) {
+        this.imageMipmap = imageMipmap;
+    }
+
+    public String getTitleSubjectName() {
+        return titleSubjectName;
+    }
+
+    public void setTitleSubjectName(String titleSubjectName) {
+        this.titleSubjectName = titleSubjectName;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 }

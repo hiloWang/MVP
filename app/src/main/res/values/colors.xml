@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#F50057</color>
     <color name="colorPrimaryDark">#80FF80AB</color>
-    <color name="colorAccent">#F50057</color>
+    <color name="colorAccent">#FF80AB</color>
 
     <!-- Dialogs -->
     <color name="material_indigo_500">#3F51B5</color>
@@ -86,6 +86,8 @@
     <!-- 分割线-->
     <color name="design_black_dividers">#12000000</color>
 
+    <color name="design_popup_title">#2d5d82</color>
+
     <!-- 普通文字-->
     <color name="design_write_text">#FFFFFF</color>
     <!-- 减淡文字-->
@@ -98,5 +100,8 @@
     <color name="design_bgcolor">#efefef</color>
 
     <color name="design_text_bgcolor">#f8f9fa</color>
+    <color name="btn_context_menu_normal">#ffffff</color>
+    <color name="btn_context_menu_pressed">#40000000</color>
+    <color name="btn_context_menu_text_red">#ffff0000</color>
 
 </resources>

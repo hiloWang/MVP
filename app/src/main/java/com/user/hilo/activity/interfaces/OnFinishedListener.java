@@ -7,5 +7,5 @@ import java.util.List;
  */
 public interface OnFinishedListener {
 
-    void onFinished(List<String> items);
+    void onFinished(List<? extends Object> items);
 }

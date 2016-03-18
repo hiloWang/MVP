@@ -70,7 +70,7 @@ public class MainPresenterIml implements MainPresenter, OnFinishedListener {
     }
 
     @Override
-    public void onFinished(List<String> items) {
+    public void onFinished(List<? extends Object> items) {
         if (mainView != null) {
             mainView.setItems(items);
             mainView.hideProgress();

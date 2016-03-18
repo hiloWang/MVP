@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -28,10 +29,13 @@ import com.user.hilo.R;
 import com.user.hilo.activity.presenter.MainPresenterIml;
 import com.user.hilo.activity.presenter.i.MainPresenter;
 import com.user.hilo.activity.view.i.MainView;
+import com.user.hilo.adapter.MainAdapterItemAnimator;
 import com.user.hilo.adapter.MainRecyclerAdapter;
-import com.user.hilo.interfaces.RecyclerViewOnItemClickListener;
+import com.user.hilo.entitys.MainEntity;
 import com.user.hilo.utils.AnimUtils;
 import com.user.hilo.utils.UIUtils;
+import com.user.hilo.view.FeedContextMenu;
+import com.user.hilo.view.FeedContextMenuManager;
 import com.user.hilo.view.pulltorefresh.PullRefreshLayout;
 
 import java.util.List;
@@ -40,11 +44,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
-import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator;
 
 public class MainActivity extends AppCompatActivity
-        implements MainView, NavigationView.OnNavigationItemSelectedListener, RecyclerViewOnItemClickListener {
+        implements MainView, NavigationView.OnNavigationItemSelectedListener, MainRecyclerAdapter.OnFeedItemClickListener, FeedContextMenu.OnFeedContextMenuClickListener {
 
     private static final int ANIM_DURATION_TOOLBAR = 300;
     private static final int ANIM_DURATION_FAB = 400;
@@ -68,6 +70,8 @@ public class MainActivity extends AppCompatActivity
     TextView mDel;
     @Bind(R.id.add)
     TextView mAdd;
+    @Bind(R.id.coordiNatorContent)
+    CoordinatorLayout mCoordiNatorContent;
 
     private Context context;
     private MainPresenter presenter;
@@ -260,23 +264,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void setItems(List<String> items) {
+    public void setItems(List<? extends Object> items) {
         if (adapter == null) {
             mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             mRecyclerView.setLayoutManager(mLinearLayoutManager);
             adapter = new MainRecyclerAdapter(this);
-            adapter.updateItems(items);
-            adapter.setRecyclerOnItemClickedListener(this);
+            adapter.setOnFeedItemClickListener(this);
             AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
-            ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
             // false: 即使是已缓存的数据 也会有动画, 默认是true
             // scaleAdapter.setFirstOnly(false);
             // 带震动的动画
-            scaleAdapter.setInterpolator(new OvershootInterpolator());
-            mRecyclerView.setItemAnimator(new ScaleInBottomAnimator());
-            mRecyclerView.setAdapter(scaleAdapter);
+            // 因为MainAdapterItemAnimation继承了ScaleInAnimationAdapter动画,所以不再需要设置他就会有scaleAnimation动画效果
+            // ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
+            // scaleAdapter.setInterpolator(new OvershootInterpolator());
+            mRecyclerView.setItemAnimator(new MainAdapterItemAnimator());
+            mRecyclerView.setAdapter(alphaAdapter);
+            adapter.updateItems((List<MainEntity>) items, true);
         } else {
-            adapter.updateItems(items, true);
+            adapter.updateItems((List<MainEntity>) items, false);
         }
     }
 
@@ -286,15 +291,30 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void addItem(String data, int position) {
-        adapter.addItem(data, position);
+    public void addItem(Object data, int position) {
+        adapter.addItem((MainEntity) data, position);
         mRecyclerView.scrollToPosition(0);
     }
 
     @Override
-    public void requestDataRefreshFinish(List<String> items) {
+    public void requestDataRefreshFinish(List<? extends Object> items) {
         mSwipeRefreshLayout.setRefreshing(false);
-        adapter.updateItems(items, false);
+        adapter.updateItems((List<MainEntity>) items, true);
+    }
+
+    @Override
+    public void onCommentsClick(View v, int position) {
+
+    }
+
+    @Override
+    public void onMoreClick(View v, int position) {
+        FeedContextMenuManager.getInstance().toggleContextMenuFromView(v, position, this);
+    }
+
+    @Override
+    public void onProfileClick(View v) {
+
     }
 
     @Override
@@ -311,6 +331,26 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, TestActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onReportClick(int position) {
+        FeedContextMenuManager.getInstance().hideContextMenu();
+    }
+
+    @Override
+    public void onSharePhotoClick(int position) {
+        FeedContextMenuManager.getInstance().hideContextMenu();
+    }
+
+    @Override
+    public void onCopyShareUrlClick(int position) {
+        FeedContextMenuManager.getInstance().hideContextMenu();
+    }
+
+    @Override
+    public void onCancelClick(int position) {
+        FeedContextMenuManager.getInstance().hideContextMenu();
     }
 
     private void startIntroAnimation() {
@@ -340,16 +380,19 @@ public class MainActivity extends AppCompatActivity
                         mFab.animate()
                                 .translationY(0)
                                 .setInterpolator(new OvershootInterpolator(1.f))
-                                .setStartDelay(25)
+                                .setStartDelay(800)
                                 .setDuration(ANIM_DURATION_FAB)
                                 .start();
 
                         presenter.requestDataFirst();
 
                     }
-                }).start(); // 1.调用setListener同时, 千万不要忘了.start(); 2.当时找不到del图标是因为translationY忘记设置回来了^^
+                    // 非用户主动触发情况下要用start()
+                }).start();
+    }
 
-
+    public void showLikedSnackbar() {
+        Snackbar.make(mCoordiNatorContent, "Liked", Snackbar.LENGTH_SHORT).show();
     }
 
     @OnClick({R.id.del, R.id.add, R.id.fab})

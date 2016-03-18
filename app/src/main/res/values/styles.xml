@@ -17,9 +17,9 @@
     <!-- CusomLight 使用material主题的时候，必须设定targetSdkVersion = 21，否则界面看起来是模糊的 -->
     <style name="CusomLight" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Actionbar color -->
-        <item name="colorPrimary">#FF80AB</item>
+        <item name="colorPrimary">@color/design_write_secondary</item>
         <!--Status bar color-->
-        <item name="colorPrimaryDark">#80FF80AB</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <!-- Status bar color API 21 -->
         <!--<item name="android:statusBarColor">#FF80AB</item>-->
         <!--Window color-->
@@ -54,5 +54,15 @@
     <!-- toolbar菜单文字尺寸 -->
     <style name="ToolbarMenuTextSize" parent="@style/TextAppearance.AppCompat.Menu">
         <item name="android:textSize">10sp</item>
+    </style>
+    <style name="ContextMenuButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/btn_context_menu</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textColor">@color/design_popup_title</item>
     </style>
 </resources>

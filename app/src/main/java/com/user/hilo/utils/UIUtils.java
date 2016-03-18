@@ -25,6 +25,7 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 
 import java.util.Locale;
@@ -64,9 +65,18 @@ public class UIUtils {
         }
     }
 
-    public static int getScreenHeight(Activity act) {
-        int height = 0;
-        Display display = act.getWindowManager().getDefaultDisplay();
+    public static int getScreenHeight(Activity act, Context context) {
+        int height;
+        WindowManager wm = null;
+        if (act == null) {
+            if (context != null)
+                wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        } else {
+            wm = act.getWindowManager();
+        }
+        if (wm == null) throw new RuntimeException("Activtiy or context can be null");
+
+        Display display = wm.getDefaultDisplay();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             Point size = new Point();
             display.getSize(size);
@@ -187,6 +197,10 @@ public class UIUtils {
     public static int dpToPx(float dp, Resources resources) {
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.getDisplayMetrics());
         return (int) px;
+    }
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
     public static int dpToPx(float dp, Activity resources) {

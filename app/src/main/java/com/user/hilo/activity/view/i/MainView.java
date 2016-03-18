@@ -11,12 +11,12 @@ public interface MainView {
 
     void hideProgress();
 
-    void setItems(List<String> items);
+    void setItems(List<? extends Object> items);
 
     void showMessage(String message);
 
-    void addItem(String data, int position);
+    void addItem(Object obj, int position);
 
-    void requestDataRefreshFinish(List<String> items);
+    void requestDataRefreshFinish(List<? extends Object> items);
 
 }

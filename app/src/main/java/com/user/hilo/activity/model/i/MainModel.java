@@ -15,8 +15,8 @@ public interface MainModel {
 
     void onDestroy();
 
-    String getData();
+    Object getData();
 
-    List<String> getItems();
+    List<? extends Object> getItems();
 
 }
