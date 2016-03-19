@@ -3,6 +3,7 @@ package com.user.hilo;
 import android.app.Application;
 import android.content.Context;
 
+import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.squareup.leakcanary.LeakCanary;
 import com.user.hilo.others.Configurations;
 import com.user.hilo.receiver.CrashHandler;
@@ -20,6 +21,14 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        /**
+         * AndroidDevMetrics measures how performant are Activity lifecycle methods in your app.
+         * It can give you information how much time was needed to open new Activity (or Application if it was launch screen)
+         * and where are possible bottlenecks.
+         */
+        if (BuildConfig.DEBUG) {
+            AndroidDevMetrics.initWith(this);
+        }
         mContext = this;
         Configurations cfg = Configurations.getConfig();
         Configurations.saveConfig();

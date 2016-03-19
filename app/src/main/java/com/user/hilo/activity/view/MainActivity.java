@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 如果配置了styles里面自定义activity过度平移动画 则需要打开注释
-//        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        // getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         context = this;
