@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.user.hilo.R;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by Administrator on 2016/3/16.
  */
@@ -32,6 +34,7 @@ public class BaseToolbarActivity extends AppCompatActivity {
         setContentView(toolBarHelper.getContentView());
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ButterKnife.bind(this);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +43,5 @@ public class BaseToolbarActivity extends AppCompatActivity {
                 overridePendingTransition(0, R.anim.activity_swipeback_ac_right_out);
             }
         });
-
     }
 }

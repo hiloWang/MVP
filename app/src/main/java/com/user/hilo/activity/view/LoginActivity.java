@@ -19,7 +19,6 @@ import com.user.hilo.interfaces.OnNoDoubleClickListener;
 import com.user.hilo.view.LoginButton;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -42,7 +41,6 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
 
         initViews();
         initEvents();

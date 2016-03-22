@@ -104,4 +104,6 @@
     <color name="btn_context_menu_pressed">#40000000</color>
     <color name="btn_context_menu_text_red">#ffff0000</color>
 
+    <color name="cardview_bg_color">#FAFAFA</color>
+
 </resources>

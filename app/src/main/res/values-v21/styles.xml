@@ -16,6 +16,7 @@
         <!--<item name="android:windowBackground">@color/dim_foreground_material_dark</item>-->
         <!-- colorAccent: 各控制元件(如：check box、switch 或是 radoi) 被勾选 (checked) 或是选定 (selected) 的颜色。-->
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/design_write_text</item>
         <!-- Remove the change account button 注释后则开启 navigation账号 button 按钮, 点击切换账号 -->
         <!--<item name="singleAccount">true</item>-->
         <!-- colorControlNormal: 各控制元件的预设颜色。-->
@@ -24,5 +25,10 @@
         <item name="android:navigationBarColor">@color/colorPrimaryDark</item>
         <!--正常状态下字体颜色和icon颜色-->
         <item name="android:textColorPrimary">@color/cpb_white</item>
+    </style>
+
+    <style name="CusomTranspatentLight" parent="CusomLight">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 </resources>

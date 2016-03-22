@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -18,13 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator;
-
 /**
  * Created by Administrator on 2016/3/18.
  * item 点击触发动画
  */
-public class MainAdapterItemAnimator extends ScaleInBottomAnimator {
+public class MainAdapterItemAnimator/* extends ScaleInBottomAnimator*/ extends DefaultItemAnimator {
 
     private static final DecelerateInterpolator DECCELERATE_INTERPOLATOR = new DecelerateInterpolator();
     private static final AccelerateDecelerateInterpolator ACCELERATE_INTERPOLATOR = new AccelerateDecelerateInterpolator();
@@ -45,6 +44,15 @@ public class MainAdapterItemAnimator extends ScaleInBottomAnimator {
         return true;
     }
 
+    /**
+     * notifyItemChanged(adapterPosition, ACTION_LICK_BUTTON_CLICKED);
+     * that Flags was ACTION_LICK_BUTTON_CLICKED
+     * @param state
+     * @param viewHolder
+     * @param changeFlags
+     * @param payloads
+     * @return
+     */
     @NonNull
     @Override
     public ItemHolderInfo recordPreLayoutInformation(@NonNull RecyclerView.State state,
@@ -69,6 +77,9 @@ public class MainAdapterItemAnimator extends ScaleInBottomAnimator {
                 return false;
             }
         }
+        /**
+         * 为了避免与add动画冲突,特super.animateAdd(holder);
+         */
 //        dispatchAddFinished(holder);
 //        return false;
         return super.animateAdd(holder);

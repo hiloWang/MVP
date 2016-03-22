@@ -4,8 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -38,22 +39,23 @@ import com.user.hilo.view.FeedContextMenu;
 import com.user.hilo.view.FeedContextMenuManager;
 import com.user.hilo.view.pulltorefresh.PullRefreshLayout;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements MainView, NavigationView.OnNavigationItemSelectedListener, MainRecyclerAdapter.OnFeedItemClickListener, FeedContextMenu.OnFeedContextMenuClickListener {
 
+    public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
     private static final int ANIM_DURATION_TOOLBAR = 300;
     private static final int ANIM_DURATION_FAB = 400;
     private static final int DEL_RECYCLER_ADAPTER_ITEM_POSITION = 0;
 
-    @Bind(R.id.fab)
-    FloatingActionButton mFab;
+    @Bind(R.id.takePhoto)
+    FloatingActionButton mTakePhoto;
     @Bind(R.id.nav_view)
     NavigationView mNavView;
     @Bind(R.id.drawer_layout)
@@ -81,6 +83,10 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager mLinearLayoutManager;
     private boolean pendingIntroAnimation;
 
+    private DelayHandler delayHandler;
+    private DelayRunnable delayRunnable;
+    private static final int PHOTO_INTO_VIEW_DELAY = 0x110;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +104,23 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getAction().equals(ACTION_SHOW_LOADING_ITEM)) {
+            showPhotoIntoImageViewDelayed();
+            adapter.setPhotoUri(intent.getData());
+        }
+    }
+
+    private void showPhotoIntoImageViewDelayed() {
+        if (delayHandler == null)
+            delayHandler = new DelayHandler(this);
+        if (delayRunnable == null)
+            delayRunnable = new DelayRunnable();
+        delayHandler.postDelayed(delayRunnable, 500);
     }
 
     @Override
@@ -139,8 +162,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         presenter.Destroy();
+        setAllRepleaseResourceFieldsNull();
         super.onDestroy();
         System.gc();
+    }
+
+    private void setAllRepleaseResourceFieldsNull() {
+        delayHandler.removeCallbacksAndMessages(0);
+        delayRunnable = null;
+        delayHandler = null;
     }
 
     @Override
@@ -244,7 +274,8 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+                // 弹出的ContextMenu跟随之前的窗体滚动
+                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
                 if (recyclerView != null && recyclerView.getChildCount() > 0)
                     lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
             }
@@ -266,19 +297,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setItems(List<? extends Object> items) {
         if (adapter == null) {
-            mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false) {
+                // 设置更多的预留空间(在RecyclerView 的元素比较高，一屏只能显示一个元素的时候，第一次滑动到第二个元素会卡顿。)
+                @Override
+                protected int getExtraLayoutSpace(RecyclerView.State state) {
+                    return 300;
+                }
+            };
             mRecyclerView.setLayoutManager(mLinearLayoutManager);
             adapter = new MainRecyclerAdapter(this);
             adapter.setOnFeedItemClickListener(this);
-            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(adapter);
             // false: 即使是已缓存的数据 也会有动画, 默认是true
             // scaleAdapter.setFirstOnly(false);
             // 带震动的动画
             // 因为MainAdapterItemAnimation继承了ScaleInAnimationAdapter动画,所以不再需要设置他就会有scaleAnimation动画效果
             // ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(alphaAdapter);
             // scaleAdapter.setInterpolator(new OvershootInterpolator());
+            mRecyclerView.setAdapter(/*new AlphaInAnimationAdapter(*/adapter);
             mRecyclerView.setItemAnimator(new MainAdapterItemAnimator());
-            mRecyclerView.setAdapter(alphaAdapter);
             adapter.updateItems((List<MainEntity>) items, true);
         } else {
             adapter.updateItems((List<MainEntity>) items, false);
@@ -320,7 +356,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemClicked(View view, int position) {
         presenter.onItemClicked(position);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (UIUtils.isAndroid5()) {
             animator = AnimUtils.attrCreateCircularReveal(view, 1000);
         }
     }
@@ -354,7 +390,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startIntroAnimation() {
-        mFab.setTranslationY(2 * getResources().getDimensionPixelOffset(R.dimen.btn_fab_size));
+        mTakePhoto.setTranslationY(2 * getResources().getDimensionPixelOffset(R.dimen.btn_fab_size));
         int actionbarSize = UIUtils.dpToPx(56, getResources());
         mToolbar.setTranslationY(-actionbarSize);
         mAdd.setTranslationY(-actionbarSize);
@@ -377,7 +413,7 @@ public class MainActivity extends AppCompatActivity
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        mFab.animate()
+                        mTakePhoto.animate()
                                 .translationY(0)
                                 .setInterpolator(new OvershootInterpolator(1.f))
                                 .setStartDelay(800)
@@ -395,7 +431,7 @@ public class MainActivity extends AppCompatActivity
         Snackbar.make(mCoordiNatorContent, "Liked", Snackbar.LENGTH_SHORT).show();
     }
 
-    @OnClick({R.id.del, R.id.add, R.id.fab})
+    @OnClick({R.id.del, R.id.add, R.id.takePhoto})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.del:
@@ -404,10 +440,42 @@ public class MainActivity extends AppCompatActivity
             case R.id.add:
                 presenter.addItem();
                 break;
-            case R.id.fab:
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            case R.id.takePhoto:
+                int[] startingLocation = new int[2];
+                view.getLocationOnScreen(startingLocation);
+                startingLocation[0] += mTakePhoto.getWidth() / 2;
+                TakePhotoActivity.startCameraFromLocation(startingLocation, this);
+                overridePendingTransition(0, 0);
                 break;
+        }
+    }
+
+    static class DelayHandler extends Handler {
+        private WeakReference<MainActivity> mWeakReference;
+        DelayHandler(MainActivity activity) {
+            mWeakReference = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity activity = mWeakReference.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case MainActivity.PHOTO_INTO_VIEW_DELAY:
+                        activity.delayHandler.removeCallbacks(activity.delayRunnable);
+                        break;
+                }
+            }
+        }
+    }
+
+    class DelayRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            // 因为是SINGLE_TOP | FLAG_ACTIVITY_CLEAR_TOP启动模式,所以会重走newIntent()方法
+            mRecyclerView.smoothScrollToPosition(0);
+            adapter.showLoadingView();
         }
     }
 }

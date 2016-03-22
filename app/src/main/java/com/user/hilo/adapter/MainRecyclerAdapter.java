@@ -1,21 +1,26 @@
 package com.user.hilo.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.user.hilo.R;
 import com.user.hilo.activity.view.MainActivity;
 import com.user.hilo.entitys.MainEntity;
 import com.user.hilo.interfaces.OnNoDoubleClickListener;
 import com.user.hilo.interfaces.RecyclerViewOnItemClickListener;
+import com.user.hilo.view.LoadingFeedItemView;
 import com.user.hilo.view.SquaredFrameLayout;
 
 import java.util.ArrayList;
@@ -40,6 +45,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     private OnFeedItemClickListener onFeedItemClickListener;
     private boolean showLoadingView = false;
+    public Uri photoUri;
 
     public MainRecyclerAdapter(Context context) {
         this.context = context;
@@ -71,6 +77,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
     }
 
+    public void showLoadingView() {
+        // showLoadingView = true, 那么notify时 重走adapter的getItemViewType()
+        showLoadingView = true;
+//        notifyItemChanged(0);
+        notifyDataSetChanged();
+    }
+
     @Override
     public FeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_DEFAULT) {
@@ -79,7 +92,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             setupClickableViews(view, cellFeedViewHolder);
             return cellFeedViewHolder;
         } else if (viewType == VIEW_TYPE_LOADER) {
-
+            LoadingFeedItemView loadingFeedItemView = new LoadingFeedItemView(context);
+            loadingFeedItemView.setLayoutParams(new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            ));
+            return new LoadingFeedViewHolder(loadingFeedItemView);
         }
         return null;
     }
@@ -94,12 +112,48 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(FeedViewHolder holder, int position) {
+    public void onBindViewHolder(final FeedViewHolder holder, int position) {
         holder.bindData(context, items.get(position), position);
 
         if (getItemViewType(position) == VIEW_TYPE_LOADER) {
-
+            bindLoadingFeedItem((LoadingFeedViewHolder) holder);
         }
+        if (photoUri != null && !showLoadingView && position == 0) {
+            holder.mIvFeedCenter.setScaleX(0.f);
+            holder.mIvFeedCenter.setScaleY(0.f);
+            Picasso.with(context)
+                    .load(photoUri)
+                    .into(holder.mIvFeedCenter, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.mIvFeedCenter.animate()
+                                    .scaleX(1.f).scaleY(1.f)
+                                    .setInterpolator(new OvershootInterpolator())
+                                    .setDuration(1000)
+                                    .start();
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+            photoUri = null;
+        } else {
+            Picasso.with(context).load(items.get(position).getImageMipmap()).into(holder.mIvFeedCenter);
+        }
+    }
+
+    private void bindLoadingFeedItem(final LoadingFeedViewHolder holder) {
+        holder.loadingFeedItemView.setOnLoadingFinishedListener(new LoadingFeedItemView.OnLoadingFinishedListener() {
+            @Override
+            public void onLoadingFinished() {
+                showLoadingView = false;
+//                notifyItemChanged(0);
+                notifyDataSetChanged();
+            }
+        });
+        holder.loadingFeedItemView.startLoading();
     }
 
     public void setOnFeedItemClickListener(OnFeedItemClickListener onFeedItemClickListener) {
@@ -173,6 +227,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         holder.itemView.clearAnimation();
     }
 
+    public void setPhotoUri(Uri photoUri) {
+        this.photoUri = photoUri;
+    }
+
     public static class FeedViewHolder extends RecyclerView.ViewHolder {
 
         private MainEntity entity;
@@ -180,7 +238,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         @Bind(R.id.tvFeedTitle)
         TextView mTvFeedTitle;
         @Bind(R.id.ivFeedCenter)
-        ImageView mIvFeedCenter;
+        public ImageView mIvFeedCenter;
         @Bind(R.id.vImageRoot)
         SquaredFrameLayout mVImageRoot;
         @Bind(R.id.ivFeedBottom)
@@ -211,11 +269,25 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         public void bindData(Context context, MainEntity data, int position) {
             entity = data;
             mTvFeedTitle.setText(data.getTitleSubjectName());
-            Picasso.with(context).load(data.getImageMipmap()).into(mIvFeedCenter);
             mBtnLike.setImageResource(data.isLiked() ? R.mipmap.ic_heart_red : R.mipmap.ic_heart_outline_grey);
             mTsLikesCounter.setCurrentText(mVImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, data.likesCount, data.likesCount
             ));
+        }
+    }
+
+    public static class LoadingFeedViewHolder extends FeedViewHolder {
+
+        LoadingFeedItemView loadingFeedItemView;
+
+        public LoadingFeedViewHolder(LoadingFeedItemView view) {
+            super(view);
+            this.loadingFeedItemView = view;
+        }
+
+        @Override
+        public void bindData(Context context, MainEntity data, int position) {
+            super.bindData(context, data, position);
         }
     }
 

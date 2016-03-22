@@ -9,7 +9,6 @@ import com.user.hilo.activity.base.BaseToolbarActivity;
 import com.user.hilo.utils.UIUtils;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2016/3/16.
@@ -23,7 +22,6 @@ public class TestActivity extends BaseToolbarActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main);
-        ButterKnife.bind(this);
 
         initViews();
         initAnimation();

@@ -24,4 +24,13 @@
     <dimen name="text_size_21">21sp</dimen>
     <dimen name="text_size_22">22sp</dimen>
     <dimen name="btn_fab_size">56dp</dimen>
+    <dimen name="btn_fab_margins">16dp</dimen>
+    <dimen name="margin_outter_24">24dp</dimen>
+    <dimen name="margin_innter_16">16dp</dimen>
+    <dimen name="pading_bottom_16">16dp</dimen>
+    <dimen name="margin_12dp">12dp</dimen>
+    <dimen name="pading_16">16dp</dimen>
+    <dimen name="margin_left_16dp">16dp</dimen>
+    <dimen name="margin_right_16dp">16dp</dimen>
+    <dimen name="publish_photo_thumbnail_size">96dp</dimen>
 </resources>

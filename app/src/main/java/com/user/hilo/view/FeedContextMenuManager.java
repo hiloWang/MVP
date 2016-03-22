@@ -117,6 +117,13 @@ public class FeedContextMenuManager extends RecyclerView.OnScrollListener implem
         }
     }
 
+    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        if (mFeedContextMenu != null) {
+            hideContextMenu();
+            mFeedContextMenu.setTranslationY(mFeedContextMenu.getTranslationY() - dy);
+        }
+    }
+
     @Override
     public void onViewAttachedToWindow(View v) {
 
