@@ -1,4 +1,4 @@
-package com.user.hilo.RxJava;
+package com.user.hilo.RxJava.WebApi;
 
 import android.net.Uri;
 
@@ -21,18 +21,22 @@ import java.util.List;
  */
 public interface Api {
 
-    /* 2. 异步回调
+    /*// 3.深入改写
     interface CatsQueryCallback {
         void onCatsListReceived(List<Cat> cats);
-        void onError(Exception e);
+        void onQueryFailed(Exception e);
+    }
+
+    interface StoreCallback {
+        void onCatStored(Uri uri);
+        void onStoreFailed(Exception e);
     }
 
     void queryCats(String query, CatsQueryCallback catsQueryCallback);
 
-    Uri store(Cat cat);*/
+    void store(Cat cat, StoreCallback storeCallback);*/
 
-
-    // 3.深入改写
+    //4. 泛型接口
     interface CatsQueryCallback {
         void onCatsListReceived(List<Cat> cats);
         void onQueryFailed(Exception e);
