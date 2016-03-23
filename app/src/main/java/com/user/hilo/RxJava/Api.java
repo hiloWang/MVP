@@ -21,10 +21,7 @@ import java.util.List;
  */
 public interface Api {
 
-    /* 传统api
-    List<Cat> queryCats(String query);
-    Uri store(Cat cat);*/
-
+    /* 2. 异步回调
     interface CatsQueryCallback {
         void onCatsListReceived(List<Cat> cats);
         void onError(Exception e);
@@ -32,5 +29,21 @@ public interface Api {
 
     void queryCats(String query, CatsQueryCallback catsQueryCallback);
 
-    Uri store(Cat cat);
+    Uri store(Cat cat);*/
+
+
+    // 3.深入改写
+    interface CatsQueryCallback {
+        void onCatsListReceived(List<Cat> cats);
+        void onQueryFailed(Exception e);
+    }
+
+    interface StoreCallback {
+        void onCatStored(Uri uri);
+        void onStoreFailed(Exception e);
+    }
+
+    void queryCats(String query, CatsQueryCallback catsQueryCallback);
+
+    void store(Cat cat, StoreCallback storeCallback);
 }
