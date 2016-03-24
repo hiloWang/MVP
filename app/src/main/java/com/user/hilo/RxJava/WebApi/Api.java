@@ -21,21 +21,6 @@ import java.util.List;
  */
 public interface Api {
 
-    /*// 3.深入改写
-    interface CatsQueryCallback {
-        void onCatsListReceived(List<Cat> cats);
-        void onQueryFailed(Exception e);
-    }
-
-    interface StoreCallback {
-        void onCatStored(Uri uri);
-        void onStoreFailed(Exception e);
-    }
-
-    void queryCats(String query, CatsQueryCallback catsQueryCallback);
-
-    void store(Cat cat, StoreCallback storeCallback);*/
-
     //4. 泛型接口
     interface CatsQueryCallback {
         void onCatsListReceived(List<Cat> cats);
