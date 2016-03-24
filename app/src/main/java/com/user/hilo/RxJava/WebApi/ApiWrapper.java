@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class ApiWrapper {
 
-    // 5. 返回回调（信息）的临时对象
     Api api;
 
     public AsyncJob<List<Cat>> queryCats(final String query) {
