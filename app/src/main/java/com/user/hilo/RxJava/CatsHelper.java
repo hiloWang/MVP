@@ -4,7 +4,6 @@ import android.net.Uri;
 
 import com.user.hilo.RxJava.WebApi.ApiWrapper;
 import com.user.hilo.RxJava.entity.Cat;
-import com.user.hilo.RxJava.i.Func;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,36 +16,6 @@ import java.util.List;
 public class CatsHelper {
 
     /**
-     *  8.现在好多了，创建AsyncJob<Cat> cutestCatAsyncJob只需要 6 行代码而回调也只有一个层级了。
-     * 高级映射
-     * 前面的那些已经很赞了，但是创建AsyncJob<Uri> storedUriAsyncJob的部分还有些不忍直视。能在这里创建映射吗？我们来试试吧：
-     */
-
-    /*ApiWrapper apiWrapper;
-
-    public AsyncJob<AsyncJob<Uri>> saveTheCutestCat(String query) {
-        AsyncJob<List<Cat>> asyncListCats = apiWrapper.queryCats(query);
-        final AsyncJob<Cat> asyncCat = asyncListCats.map(new Func<List<Cat>, Cat>() {
-            @Override
-            public Cat call(List<Cat> cats) {
-                return findCutest(cats);
-            }
-        });
-
-        AsyncJob<AsyncJob<Uri>> asyncStoreUri = asyncCat.map(new Func<Cat, AsyncJob<Uri>>() {
-            @Override
-            public AsyncJob<Uri> call(Cat cat) {
-                return apiWrapper.store(cat);
-            }
-        });
-        return asyncStoreUri;
-    }
-
-    private Cat findCutest(List<Cat> cats) {
-        return Collections.max(cats);
-    }*/
-
-    /**
      * 9. 在目前这点上我们只能有AsyncJob<AsyncJob<Uri>>。我们需要往更深处挖吗？我们希望的是，
      * 去把AsyncJob在一个级别上的两个异步操作扁平化成一个单一的异步操作。
      * 现在我们需要的是得到能使方法返回映射成R类型也是AsyncJob<R>类型的操作。这个操作应该像map，
@@ -54,7 +23,7 @@ public class CatsHelper {
      * 修复AsyncJob类
      */
 
-    ApiWrapper apiWrapper;
+  /*  ApiWrapper apiWrapper;
 
     public AsyncJob<Uri> saveTheCutestCat(String query) {
         AsyncJob<List<Cat>> asyncListCats = apiWrapper.queryCats(query);
@@ -76,5 +45,23 @@ public class CatsHelper {
 
     private Cat findCutest(List<Cat> cats) {
         return Collections.max(cats);
+    }*/
+
+    /**
+     * 10. java8 lambdas
+     */
+
+    ApiWrapper apiWrapper;
+
+    public AsyncJob<Uri> saveTheCutestCat(String query) {
+        AsyncJob<List<Cat>> asyncListCats = apiWrapper.queryCats(query);
+        AsyncJob<Cat> asyncCat = asyncListCats.map(cats -> findCutest(cats));
+        AsyncJob<Uri> asyncStoreUri = asyncCat.flatMap(cat -> apiWrapper.store(cat));
+        return asyncStoreUri;
     }
+
+    private Cat findCutest(List<Cat> cats) {
+        return Collections.max(cats);
+    }
+
 }
