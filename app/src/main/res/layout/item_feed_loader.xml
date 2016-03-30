@@ -25,7 +25,7 @@
                   android:textColor="@color/design_black_text"
                   android:textSize="@dimen/text_size_16"/>
 
-        <com.user.hilo.view.SquaredFrameLayout
+        <com.user.hilo.widget.SquaredFrameLayout
             android:id="@+id/vImageRoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -56,13 +56,13 @@
                 android:layout_height="match_parent"
                 android:background="#77ffffff" />
 
-            <com.user.hilo.view.SendingProgressView
+            <com.user.hilo.widget.SendingProgressView
                 android:id="@+id/vSendingProgress"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:layout_gravity="center" />
 
-        </com.user.hilo.view.SquaredFrameLayout>
+        </com.user.hilo.widget.SquaredFrameLayout>
 
         <ImageView
             android:id="@+id/ivFeedBottom"

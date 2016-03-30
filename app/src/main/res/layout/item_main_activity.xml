@@ -25,7 +25,7 @@
                   android:textColor="@color/design_black_text"
                   android:textSize="@dimen/text_size_16"/>
 
-        <com.user.hilo.view.SquaredFrameLayout
+        <com.user.hilo.widget.SquaredFrameLayout
             android:id="@+id/vImageRoot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -50,7 +50,7 @@
                 android:src="@mipmap/ic_heart_outline_white"
                 android:visibility="invisible"/>
 
-        </com.user.hilo.view.SquaredFrameLayout>
+        </com.user.hilo.widget.SquaredFrameLayout>
 
         <ImageView
             android:id="@+id/ivFeedBottom"

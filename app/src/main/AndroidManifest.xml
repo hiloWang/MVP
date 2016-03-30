@@ -31,7 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/CusomLight">
         <activity
-            android:name=".activity.view.LoginActivity"
+            android:name=".view.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -39,15 +39,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.view.TestActivity"
+        <activity android:name=".view.TestActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".activity.view.MainActivity"
+        <activity android:name=".view.MainActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".activity.view.TakePhotoActivity"
+        <activity android:name=".view.TakePhotoActivity"
                   android:screenOrientation="portrait"
                   android:theme="@style/CusomTranspatentLight"
                   android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activity.view.PublishActivity"
+        <activity android:name=".view.PublishActivity"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
     </application>

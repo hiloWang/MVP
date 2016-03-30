@@ -35,7 +35,7 @@
         android:textColor="@color/design_black_text"
         android:textColorHint="@color/design_black_disable"/>
 
-    <com.user.hilo.view.LoginButton
+    <com.user.hilo.widget.LoginButton
         android:id="@+id/btnCommit"
         android:layout_width="match_parent"
         android:layout_height="30dp"

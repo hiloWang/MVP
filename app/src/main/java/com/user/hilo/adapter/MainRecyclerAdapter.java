@@ -16,12 +16,12 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.user.hilo.R;
-import com.user.hilo.activity.view.MainActivity;
-import com.user.hilo.entitys.MainEntity;
+import com.user.hilo.bean.MainEntity;
 import com.user.hilo.interfaces.OnNoDoubleClickListener;
 import com.user.hilo.interfaces.RecyclerViewOnItemClickListener;
-import com.user.hilo.view.LoadingFeedItemView;
-import com.user.hilo.view.SquaredFrameLayout;
+import com.user.hilo.view.MainActivity;
+import com.user.hilo.widget.LoadingFeedItemView;
+import com.user.hilo.widget.SquaredFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +118,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         if (getItemViewType(position) == VIEW_TYPE_LOADER) {
             bindLoadingFeedItem((LoadingFeedViewHolder) holder);
         }
+
         if (photoUri != null && !showLoadingView && position == 0) {
             holder.mIvFeedCenter.setScaleX(0.f);
             holder.mIvFeedCenter.setScaleY(0.f);
@@ -140,6 +141,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     });
             photoUri = null;
         } else {
+//            holder.mIvFeedCenter.setImageBitmap(TestBitmapOOM.loaderResourceImage(context, R.drawable.test_bitmap));
             Picasso.with(context).load(items.get(position).getImageMipmap()).into(holder.mIvFeedCenter);
         }
     }

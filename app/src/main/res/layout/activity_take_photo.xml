@@ -3,7 +3,7 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <com.user.hilo.view.RevealBackgroundView
+    <com.user.hilo.widget.RevealBackgroundView
         android:id="@+id/vRevealBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -109,7 +109,7 @@
 
         </ViewSwitcher>
 
-        <com.user.hilo.view.SquaredFrameLayout
+        <com.user.hilo.widget.SquaredFrameLayout
             android:id="@+id/vPhotoRoot"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -134,7 +134,7 @@
                 android:layout_height="match_parent"
                 android:background="#ffffff"
                 android:visibility="gone"/>
-        </com.user.hilo.view.SquaredFrameLayout>
+        </com.user.hilo.widget.SquaredFrameLayout>
 
         <ViewSwitcher
             android:id="@+id/vLowerPanel"
