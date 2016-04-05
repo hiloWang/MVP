@@ -266,6 +266,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                // SCROLL_STATE_IDLE 滑翔状态
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
                     // 当滚动到最后一条时的逻辑处理
                     Toast.makeText(context, "没有数据可加载", Toast.LENGTH_SHORT).show();
