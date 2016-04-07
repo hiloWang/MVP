@@ -1,48 +1,71 @@
 package com.user.hilo.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.widget.ProgressBar;
+import android.support.design.widget.NavigationView;
+import android.view.MenuItem;
 
 import com.user.hilo.R;
-import com.user.hilo.core.BaseToolbarActivity;
+import com.user.hilo.core.BaseDrawerLayoutActivity;
+import com.user.hilo.utils.ToastUtils;
 import com.user.hilo.utils.UIUtils;
-
-import butterknife.Bind;
 
 /**
  * Created by Administrator on 2016/3/16.
  */
-public class TestActivity extends BaseToolbarActivity {
-
-    @Bind(R.id.progressBar)
-    ProgressBar mProgressBar;
+public class TestActivity extends BaseDrawerLayoutActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
+    protected int getLayoutId() {
+        return R.layout.activity_test;
+    }
 
-        initViews();
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
+        mActionBarHelper.setTitle("测试Toolbar标题");
         initAnimation();
+    }
+
+    @Override
+    protected void initListeners() {
+
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected NavigationView.OnNavigationItemSelectedListener getNavigationItemSelectedListener() {
+        return new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                return TestActivity.this.menuItemChecked(item.getItemId());
+            }
+        };
+    }
+
+    @Override
+    protected int[] getMenuItemIds() {
+        return new int[]{R.id.action_settings};
+    }
+
+    @Override
+    protected void onMenuItemOnClick(MenuItem now) {
+        switch (now.getItemId()) {
+            case R.id.action_settings:
+                ToastUtils.show(this, "action_settings" + now.getItemId(), 1);
+                break;
+        }
     }
 
     private void initAnimation() {
         int actionbarSize = UIUtils.dpToPx(56, getResources());
         toolbar.setTranslationY(-actionbarSize);
-        toolbarTitle.setTranslationY(-actionbarSize);
         toolbar.animate()
                 .translationY(0)
                 .setDuration(400)
                 .setStartDelay(400);
-        toolbarTitle.animate()
-                .translationY(0)
-                .setDuration(400)
-                .setStartDelay(500);
-    }
-
-    private void initViews() {
-        toolbarTitle.setText("测试Toolbar标题");
     }
 
     @Override

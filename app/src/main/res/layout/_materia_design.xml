@@ -181,7 +181,7 @@ SwipeRefreshLayout是伟大的Google在v4包中给出的下拉刷新组件。
             例如：LinearLayout布局或者RelativeLayout布局；
         也可以是单个控件，
             如 TextView等  -->
-        <include layout="@layout/toolbar" />
+        <include layout="@layout/toolbar_default" />
 
 
         <!-- 第二个位置 -->

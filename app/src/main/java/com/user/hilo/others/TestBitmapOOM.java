@@ -1,6 +1,7 @@
 package com.user.hilo.others;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -16,6 +17,12 @@ import java.io.InputStream;
  */
 public class TestBitmapOOM {
 
+    /**
+     * 示例1：只为讲解，其实并没有实际解决卡顿效果
+     * @param context
+     * @param imgResource
+     * @return
+     */
     public static Bitmap loaderResourceImage(Context context, int imgResource) {
 
 //        1）加载Raw下载图片
@@ -68,5 +75,58 @@ public class TestBitmapOOM {
         // 7、解码位图
         Bitmap newBitmap = BitmapFactory.decodeStream(inputStream, null, options);
         return newBitmap;
+    }
+
+    /**
+     * 示例2：可以直接使用的工具类
+     */
+    public static Bitmap resizeBitmapFromResource(Resources res, int resId, int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
+
+    /**
+     * 示例3：可以直接使用的工具类，调用api封装好的转换
+     * @param bitmap
+     * @param reqWidth
+     * @param reqHeight
+     * @return
+     */
+    public static Bitmap resizeBitmap(Bitmap bitmap, int reqWidth, int reqHeight) {
+        return Bitmap.createScaledBitmap(bitmap, reqWidth, reqHeight, true);
+
+    }
+
+    public static int calculateSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) > reqHeight
+                    && (halfWidth / inSampleSize) > reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

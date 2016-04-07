@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+
+        <include layout="@layout/include_toolbar"/>
+
+        <com.user.hilo.widget.LoginButton
+            android:id="@+id/btnCommit"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/btn_send_comment"
+            android:elevation="4dp"
+            android:orientation="vertical"/>
+
+    </LinearLayout>
+
+    <!--<include
+        layout="@layout/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>-->
+
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:itemTextColor="@color/design_black_text"
+        app:menu="@menu/activity_main_drawer"/>
+
+</android.support.v4.widget.DrawerLayout>

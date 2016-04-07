@@ -251,13 +251,15 @@ public class MainActivity extends AppCompatActivity
         mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
         mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mSwipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefreshing() {
-                presenter.requestDataRefresh();
-            }
-        });
-        mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefreshing() {
+                    presenter.requestDataRefresh();
+                }
+            });
+            mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
+        }
     }
 
     private void initEvents() {
@@ -331,8 +333,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void addItem(Object data, int position) {
-        adapter.addItem((MainEntity) data, position);
-        mRecyclerView.scrollToPosition(0);
+        if (adapter != null) {
+            adapter.addItem((MainEntity) data, position);
+            mRecyclerView.scrollToPosition(0);
+        }
     }
 
     @Override

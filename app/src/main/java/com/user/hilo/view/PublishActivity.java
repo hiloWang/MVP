@@ -4,11 +4,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,12 +54,15 @@ public class PublishActivity extends BaseToolbarActivity {
     }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_publish);
+    protected int getLayoutId() {
+        return R.layout.activity_publish;
+    }
 
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
         photoSize = getResources().getDimensionPixelOffset(R.dimen.publish_photo_thumbnail_size);
         setupToolbar();
+
         if (savedInstanceState == null) {
             photoUri = getIntent().getParcelableExtra(ARG_TAKEN_PHOTO_URI);
         } else {
@@ -77,13 +78,22 @@ public class PublishActivity extends BaseToolbarActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void initListeners() {
+
+    }
+
+    @Override
+    protected void initData() {
 
     }
 
     private void setupToolbar() {
         toolbar.setBackgroundColor(0xffffff);
-        toolbarTitle.setText("SHARE TO");
-        toolbarTitle.setTextColor(Color.parseColor("#333333"));
+        mActionBarHelper.setTitle("SHARE TO");
+//        toolbarTitle.setTextColor(Color.parseColor("#333333"));
         toolbar.setNavigationOnClickListener(new OnNoDoubleClickListener() {
             @Override
             protected void onNoDoubleClickListener(View v) {

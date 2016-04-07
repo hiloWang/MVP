@@ -101,6 +101,7 @@ public class UIUtils {
         return new Point(width, height);
     }
 
+
     public static Bitmap getCroppedBitmapDrawable(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);

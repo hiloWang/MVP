@@ -2,7 +2,6 @@ package com.user.hilo.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
@@ -38,22 +37,20 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     private ILoginPresenter presenter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    protected int getLayoutId() {
+        return R.layout.activity_login;
+    }
 
-        initViews();
-        initEvents();
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
+        toolbar.setNavigationIcon(android.R.color.transparent);
+        mActionBarHelper.setTitle("登录界面");
 
         presenter = new LoginPresenter(this);
     }
 
-    private void initViews() {
-        toolbar.setNavigationIcon(android.R.color.transparent);
-        toolbarTitle.setText("登录界面");
-    }
-
-    private void initEvents() {
+    @Override
+    protected void initListeners() {
         mBtnCommit.setOnSendClickListener(this);
         toolbar.setNavigationOnClickListener(new OnNoDoubleClickListener() {
             @Override
@@ -61,6 +58,11 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
 
             }
         });
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override
