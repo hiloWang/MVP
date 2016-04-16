@@ -1,6 +1,6 @@
 package com.user.hilo.model;
 
-import com.user.hilo.bean.DailyData;
+import com.user.hilo.bean.DailyBean;
 import com.user.hilo.interfaces.OnFinishedListener;
 import com.user.hilo.model.i.IDailyModel;
 
@@ -18,7 +18,7 @@ public class DailyModel implements IDailyModel {
     public static DailyModel getInstance() {return instance;}
 
     @Override
-    public Observable<DailyData> getDaily(int year, int month, int day) {
+    public Observable<DailyBean> getDaily(int year, int month, int day) {
         return null;
 
     }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.user.hilo.R;
-import com.user.hilo.bean.MainEntity;
+import com.user.hilo.bean.HomeBean;
 import com.user.hilo.interfaces.OnNoDoubleClickListener;
 import com.user.hilo.interfaces.RecyclerViewOnItemClickListener;
 import com.user.hilo.view.MainActivity;
@@ -41,7 +41,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public static final int VIEW_TYPE_LOADER = 2;
 
     private Context context;
-    private List<MainEntity> items;
+    private List<HomeBean> items;
 
     private OnFeedItemClickListener onFeedItemClickListener;
     private boolean showLoadingView = false;
@@ -51,7 +51,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         this.context = context;
     }
 
-    public void updateItems(List<MainEntity> items, boolean animated) {
+    public void updateItems(List<HomeBean> items, boolean animated) {
         this.items = items;
         if (items == null) this.items = new ArrayList<>();
         if (animated) {
@@ -61,14 +61,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
     }
 
-    public void addItem(MainEntity data, int position) {
+    public void addItem(HomeBean data, int position) {
         items.add(position, data);
         notifyItemInserted(position);
     }
 
     public void delItem(int position) {
         if (items != null && items.size() > 0) {
-            MainEntity data = items.get(position);
+            HomeBean data = items.get(position);
             if (data != null) {
                 items.remove(data);
 //                notifyItemRemoved(position);
@@ -175,29 +175,23 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 onFeedItemClickListener.onCommentsClick(view, cellFeedViewHolder.getLayoutPosition());
             }
         });
-        cellFeedViewHolder.mBtnLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPosition = cellFeedViewHolder.getAdapterPosition();
-                if (adapterPosition != -1) {
-                    items.get(adapterPosition).likesCount++;
-                    notifyItemChanged(adapterPosition, ACTION_LICK_BUTTON_CLICKED);
-                    if (context instanceof MainActivity) {
-                        ((MainActivity) context).showLikedSnackbar();
-                    }
+        cellFeedViewHolder.mBtnLike.setOnClickListener(v -> {
+            int adapterPosition = cellFeedViewHolder.getAdapterPosition();
+            if (adapterPosition != -1) {
+                items.get(adapterPosition).likesCount++;
+                notifyItemChanged(adapterPosition, ACTION_LICK_BUTTON_CLICKED);
+                if (context instanceof MainActivity) {
+                    ((MainActivity) context).showLikedSnackbar();
                 }
             }
         });
-        cellFeedViewHolder.mIvFeedCenter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int adapterPosition = cellFeedViewHolder.getAdapterPosition();
-                if (adapterPosition != -1) {
-                    items.get(adapterPosition).likesCount++;
-                    notifyItemChanged(adapterPosition, ACTION_LICK_IMAGE_CLICKED);
-                    if (context instanceof MainActivity) {
-                        ((MainActivity) context).showLikedSnackbar();
-                    }
+        cellFeedViewHolder.mIvFeedCenter.setOnClickListener(v -> {
+            int adapterPosition = cellFeedViewHolder.getAdapterPosition();
+            if (adapterPosition != -1) {
+                items.get(adapterPosition).likesCount++;
+                notifyItemChanged(adapterPosition, ACTION_LICK_IMAGE_CLICKED);
+                if (context instanceof MainActivity) {
+                    ((MainActivity) context).showLikedSnackbar();
                 }
             }
         });
@@ -207,12 +201,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 onFeedItemClickListener.onItemClicked(v, cellFeedViewHolder.getLayoutPosition());
             }
         });
-        cellFeedViewHolder.mTvFeedTitle.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                onFeedItemClickListener.onItemLongClicked(v, cellFeedViewHolder.getLayoutPosition());
-                return false;
-            }
+        cellFeedViewHolder.mTvFeedTitle.setOnLongClickListener(v -> {
+            onFeedItemClickListener.onItemLongClicked(v, cellFeedViewHolder.getLayoutPosition());
+            return false;
         });
     }
 
@@ -235,7 +226,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     public static class FeedViewHolder extends RecyclerView.ViewHolder {
 
-        private MainEntity entity;
+        private HomeBean entity;
 
         @Bind(R.id.tvFeedTitle)
         TextView mTvFeedTitle;
@@ -264,11 +255,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         }
 
-        public MainEntity getEntity() {
+        public HomeBean getEntity() {
             return entity;
         }
 
-        public void bindData(Context context, MainEntity data, int position) {
+        public void bindData(Context context, HomeBean data, int position) {
             entity = data;
             mTvFeedTitle.setText(data.getTitleSubjectName());
             mBtnLike.setImageResource(data.isLiked() ? R.mipmap.ic_heart_red : R.mipmap.ic_heart_outline_grey);
@@ -288,7 +279,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
 
         @Override
-        public void bindData(Context context, MainEntity data, int position) {
+        public void bindData(Context context, HomeBean data, int position) {
             super.bindData(context, data, position);
         }
     }

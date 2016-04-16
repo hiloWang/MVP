@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.frogermcs.androiddevmetrics'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
@@ -19,9 +20,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    // android不支持java8 需要3个条件才可以使用lambda
+    // 1)apply plugin: 'me.tatarka.retrolambda'
+    // 2)classpath 'me.tatarka:gradle-retrolambda:3.1.0'
+    // 3)下面的compileOptions
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_7
-        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 }
 

@@ -1,6 +1,6 @@
 package com.user.hilo.model.i;
 
-import com.user.hilo.bean.DailyData;
+import com.user.hilo.bean.DailyBean;
 import com.user.hilo.interfaces.OnFinishedListener;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public interface IDailyModel {
      * @param day   day
      * @return Observable<GankDaily>
      */
-    Observable<DailyData> getDaily(int year, int month, int day);
+    Observable<DailyBean> getDaily(int year, int month, int day);
 
     void FindItems(OnFinishedListener onFinishedListener);
 

@@ -37,12 +37,7 @@ public class TestActivity extends BaseDrawerLayoutActivity {
 
     @Override
     protected NavigationView.OnNavigationItemSelectedListener getNavigationItemSelectedListener() {
-        return new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                return TestActivity.this.menuItemChecked(item.getItemId());
-            }
-        };
+        return item -> TestActivity.this.menuItemChecked(item.getItemId());
     }
 
     @Override

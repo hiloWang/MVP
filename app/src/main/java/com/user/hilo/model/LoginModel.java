@@ -32,14 +32,11 @@ public class LoginModel implements ILoginModel {
             onLoginFinishedListener.validateStatus(VALIDATE_SUCCESS);
 
             // Mock login. I'm creating a handler to delay the answer a couple of seconds
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // login success
-                    onLoginFinishedListener.onSuccess();
-                    // login error
-                    // onLoginFinishedListener.validateStatus(SERVER_ERROR);
-                }
+            new Handler().postDelayed(() -> {
+                // login success
+                onLoginFinishedListener.onSuccess();
+                // login error
+                // onLoginFinishedListener.validateStatus(SERVER_ERROR);
             }, 2 * 100);
         }
     }

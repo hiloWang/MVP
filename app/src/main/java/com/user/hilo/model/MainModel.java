@@ -5,7 +5,7 @@ import android.os.Message;
 
 import com.user.hilo.R;
 import com.user.hilo.interfaces.OnFinishedListener;
-import com.user.hilo.bean.MainEntity;
+import com.user.hilo.bean.HomeBean;
 import com.user.hilo.model.i.IMainModel;
 
 import java.lang.ref.WeakReference;
@@ -47,23 +47,23 @@ public class MainModel implements IMainModel {
     }
 
     @Override
-    public MainEntity getData() {
+    public HomeBean getData() {
 
-        return new MainEntity("clicked add ", 0, false, mipmap[(int) (Math.random() * 8)]);
+        return new HomeBean("clicked add ", 0, false, mipmap[(int) (Math.random() * 8)]);
     }
 
     @Override
-    public List<MainEntity> getItems() {
-        List<MainEntity> entities = new ArrayList<>();
+    public List<HomeBean> getItems() {
+        List<HomeBean> entities = new ArrayList<>();
         entities.addAll(Arrays.asList(
-                new MainEntity("A", 0, false, mipmap[(int) (Math.random() * 8)]),
-                new MainEntity("B", 0, false, mipmap[(int) (Math.random() * 8)]),
-                new MainEntity("C", 0, false, mipmap[5]),
-                new MainEntity("D", 0, false, mipmap[4]),
-                new MainEntity("E", 0, false, mipmap[3]),
-                new MainEntity("F", 0, false, mipmap[2]),
-                new MainEntity("G", 0, false, mipmap[1]),
-                new MainEntity("H", 0, false, mipmap[0])
+                new HomeBean("A", 0, false, mipmap[(int) (Math.random() * 8)]),
+                new HomeBean("B", 0, false, mipmap[(int) (Math.random() * 8)]),
+                new HomeBean("C", 0, false, mipmap[5]),
+                new HomeBean("D", 0, false, mipmap[4]),
+                new HomeBean("E", 0, false, mipmap[3]),
+                new HomeBean("F", 0, false, mipmap[2]),
+                new HomeBean("G", 0, false, mipmap[1]),
+                new HomeBean("H", 0, false, mipmap[0])
         ));
         return entities;
     }
@@ -76,10 +76,10 @@ public class MainModel implements IMainModel {
         }
     }
 
-    private List<MainEntity> createArrayList() {
-        List<MainEntity> entities = new ArrayList<>();
+    private List<HomeBean> createArrayList() {
+        List<HomeBean> entities = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            entities.add(new MainEntity("subject " + i, 0, false, mipmap[i > 7 ? (int) (Math.random() * 8) : i]));
+            entities.add(new HomeBean("subject " + i, 0, false, mipmap[i > 7 ? (int) (Math.random() * 8) : i]));
         }
         return entities;
     }

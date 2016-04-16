@@ -11,5 +11,4 @@ public interface RecyclerViewOnItemClickListener {
 
     void onItemLongClicked(View view, int position);
 
-
 }

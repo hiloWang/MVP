@@ -1,6 +1,6 @@
 package com.user.hilo.data;
 
-import com.user.hilo.bean.DailyData;
+import com.user.hilo.bean.DailyBean;
 import com.user.hilo.model.DailyModel;
 import com.user.hilo.presenter.MainPresenter;
 
@@ -30,7 +30,7 @@ public class DataManager {
         return instance;
     }
 
-    public Observable<List<DailyData>> getDailyDataByNetWork(MainPresenter.TodayDate currentDate) {
+    public Observable<List<DailyBean>> getDailyDataByNetWork(MainPresenter.TodayDate currentDate) {
 //        return Observable.just(currentDate)
 //                .flatMapIterable(MainPresenter.TodayDate::getPastTime)
 //                .flatMap(todayDate -> {

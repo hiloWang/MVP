@@ -13,8 +13,6 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -27,14 +25,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.user.hilo.R;
-import com.user.hilo.presenter.MainPresenter;
-import com.user.hilo.presenter.i.IMainPresenter;
-import com.user.hilo.view.i.MainView;
 import com.user.hilo.adapter.MainAdapterItemAnimator;
 import com.user.hilo.adapter.MainRecyclerAdapter;
-import com.user.hilo.bean.MainEntity;
+import com.user.hilo.bean.HomeBean;
+import com.user.hilo.core.BaseDrawerLayoutActivity;
+import com.user.hilo.presenter.MainPresenter;
+import com.user.hilo.presenter.i.IMainPresenter;
 import com.user.hilo.utils.AnimUtils;
+import com.user.hilo.utils.ToastUtils;
 import com.user.hilo.utils.UIUtils;
+import com.user.hilo.view.i.MainView;
 import com.user.hilo.widget.FeedContextMenu;
 import com.user.hilo.widget.FeedContextMenuManager;
 import com.user.hilo.widget.pulltorefresh.PullRefreshLayout;
@@ -43,11 +43,10 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity
-        implements MainView, NavigationView.OnNavigationItemSelectedListener, MainRecyclerAdapter.OnFeedItemClickListener, FeedContextMenu.OnFeedContextMenuClickListener {
+public class MainActivity extends BaseDrawerLayoutActivity
+        implements MainView, MainRecyclerAdapter.OnFeedItemClickListener, FeedContextMenu.OnFeedContextMenuClickListener {
 
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
     private static final int ANIM_DURATION_TOOLBAR = 300;
@@ -56,10 +55,6 @@ public class MainActivity extends AppCompatActivity
 
     @Bind(R.id.takePhoto)
     FloatingActionButton mTakePhoto;
-    @Bind(R.id.nav_view)
-    NavigationView mNavView;
-    @Bind(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.progressBar)
@@ -88,21 +83,86 @@ public class MainActivity extends AppCompatActivity
     private static final int PHOTO_INTO_VIEW_DELAY = 0x110;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // 如果配置了styles里面自定义activity过度平移动画 则需要打开注释
-        // getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        context = this;
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
 
-        initViews();
-        initEvents();
+    @Override
+    protected void initViews(Bundle savedInstanceState) {
+        context = this;
+        mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        if (mSwipeRefreshLayout != null) {
+            mSwipeRefreshLayout.setOnRefreshListener(() -> presenter.requestDataRefresh());
+            mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
+        }
 
         presenter = new MainPresenter(this);
 
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
+        }
+    }
+
+    @Override
+    protected void initListeners() {
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                // SCROLL_STATE_IDLE 滑翔状态
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
+                    // 当滚动到最后一条时的逻辑处理
+                    Toast.makeText(context, "没有数据可加载", Toast.LENGTH_SHORT).show();
+                } else if (mLinearLayoutManager.findFirstVisibleItemPosition() == 0) {
+
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                // 弹出的ContextMenu跟随之前的窗体滚动
+                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
+                if (recyclerView != null && recyclerView.getChildCount() > 0)
+                    lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
+            }
+        });
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_settings);
+
+        if (pendingIntroAnimation) {
+            pendingIntroAnimation = false;
+            startIntroAnimation();
+        }
+        return true;
+    }
+
+    @Override
+    protected NavigationView.OnNavigationItemSelectedListener getNavigationItemSelectedListener() {
+        return item -> MainActivity.this.menuItemChecked(item.getItemId());
+    }
+
+    @Override
+    protected int[] getMenuItemIds() {
+        return new int[]{R.id.action_settings};
+    }
+
+    @Override
+    protected void onMenuItemOnClick(MenuItem now) {
+        switch (now.getItemId()) {
+            case R.id.action_settings:
+                ToastUtils.show(this, "action_settings" + now.getItemId(), 1);
+                break;
         }
     }
 
@@ -192,102 +252,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_settings);
-
-        if (pendingIntroAnimation) {
-            pendingIntroAnimation = false;
-            startIntroAnimation();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent com.user.hilo.activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            //noinspection SimplifiableIfStatement
-            case R.id.action_settings:
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    private void initViews() {
-        setSupportActionBar(mToolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.setDrawerListener(toggle);
-        toggle.syncState();
-        mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefreshing() {
-                    presenter.requestDataRefresh();
-                }
-            });
-            mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
-        }
-    }
-
-    private void initEvents() {
-        mNavView.setNavigationItemSelectedListener(this);
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                // SCROLL_STATE_IDLE 滑翔状态
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
-                    // 当滚动到最后一条时的逻辑处理
-                    Toast.makeText(context, "没有数据可加载", Toast.LENGTH_SHORT).show();
-                } else if (mLinearLayoutManager.findFirstVisibleItemPosition() == 0) {
-
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                // 弹出的ContextMenu跟随之前的窗体滚动
-                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-                if (recyclerView != null && recyclerView.getChildCount() > 0)
-                    lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
-            }
-        });
-    }
-
-    @Override
     public void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.INVISIBLE);
@@ -320,9 +284,9 @@ public class MainActivity extends AppCompatActivity
             // scaleAdapter.setInterpolator(new OvershootInterpolator());
             mRecyclerView.setAdapter(/*new AlphaInAnimationAdapter(*/adapter);
             mRecyclerView.setItemAnimator(new MainAdapterItemAnimator());
-            adapter.updateItems((List<MainEntity>) items, true);
+            adapter.updateItems((List<HomeBean>) items, true);
         } else {
-            adapter.updateItems((List<MainEntity>) items, false);
+            adapter.updateItems((List<HomeBean>) items, false);
         }
     }
 
@@ -334,7 +298,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void addItem(Object data, int position) {
         if (adapter != null) {
-            adapter.addItem((MainEntity) data, position);
+            adapter.addItem((HomeBean) data, position);
             mRecyclerView.scrollToPosition(0);
         }
     }
@@ -342,7 +306,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void requestDataRefreshFinish(List<? extends Object> items) {
         mSwipeRefreshLayout.setRefreshing(false);
-        adapter.updateItems((List<MainEntity>) items, false);
+        adapter.updateItems((List<HomeBean>) items, false);
     }
 
     @Override
