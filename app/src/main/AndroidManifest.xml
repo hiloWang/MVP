@@ -32,7 +32,8 @@
         android:theme="@style/CusomLight">
         <activity
             android:name=".view.LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -40,8 +41,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.TestActivity"
+                  android:launchMode="singleInstance"
                   android:screenOrientation="portrait"/>
         <activity android:name=".view.MainActivity"
+                  android:launchMode="singleInstance"
                   android:screenOrientation="portrait"/>
         <activity android:name=".view.TakePhotoActivity"
                   android:screenOrientation="portrait"

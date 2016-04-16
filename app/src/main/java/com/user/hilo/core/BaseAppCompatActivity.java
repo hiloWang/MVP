@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import com.user.hilo.R;
 import com.user.hilo.utils.ToastUtils;
 
 import butterknife.ButterKnife;
@@ -140,11 +141,11 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void showToast(String msg) {
+    protected void showToast(String msg) {
         this.showToast(msg, Toast.LENGTH_SHORT);
     }
 
-    public void showToast(String msg, int duration) {
+    protected void showToast(String msg, int duration) {
         if (msg == null) return;
         if (duration == Toast.LENGTH_SHORT || duration == Toast.LENGTH_LONG) {
             ToastUtils.show(this, msg, duration);
@@ -153,7 +154,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         }
     }
 
-    public void showToast(int resId) {
+    protected void showToast(int resId) {
         this.showToast(resId, Toast.LENGTH_SHORT);
     }
 
@@ -164,5 +165,12 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         } else {
             ToastUtils.show(this, resId, ToastUtils.LENGTH_SHORT);
         }
+    }
+
+    protected void overridePendingTransition(boolean backActivity) {
+        if (backActivity)
+            overridePendingTransition(0, R.anim.activity_swipeback_ac_right_out);
+        else
+            overridePendingTransition(R.anim.activity_swipeback_ac_right_in, R.anim.activity_swipeback_ac_right_remain);
     }
 }

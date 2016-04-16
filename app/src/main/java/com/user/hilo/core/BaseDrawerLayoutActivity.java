@@ -1,6 +1,8 @@
 package com.user.hilo.core;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -11,6 +13,7 @@ import android.view.View;
 
 import com.user.hilo.R;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +26,8 @@ import butterknife.Bind;
  */
 public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
 
+    private final int DRAWER_CLOSED_DELAY_MILLIS = 50;
+
     @Bind(R.id.drawer_layout)
     protected DrawerLayout mDrawerLayout;
     @Bind(R.id.nav_view)
@@ -31,10 +36,12 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     private ActionBarDrawerToggle mDrawerToggle;
 
     protected HashMap<Integer, MenuItem> mMenuItems;
+    private DelayHandler delayHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (delayHandler == null) delayHandler = new DelayHandler(this);
         if (this.getNavigationItemSelectedListener() != null)
             this.mNavigationView.setNavigationItemSelectedListener(this.getNavigationItemSelectedListener());
 
@@ -161,6 +168,16 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         }
     }
 
+    public interface OnDrawerClosedCallback {
+        void onDrawerClosedCallback();
+    }
+
+    private OnDrawerClosedCallback onDrawerClosedCallback;
+
+    public void setOnDrawerClosedCallback(OnDrawerClosedCallback onDrawerClosedCallback) {
+        this.onDrawerClosedCallback = onDrawerClosedCallback;
+    }
+
     /**
      * When using ActionBarDrawerToggle, all DrawerLayout listener methods should be forwarded
      * if the ActionBarDrawerToggle is not used as the DrawerLayout listener directly.
@@ -178,6 +195,12 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         public void onDrawerClosed(View drawerView) {
             BaseDrawerLayoutActivity.this.mDrawerToggle.onDrawerClosed(drawerView);
             BaseDrawerLayoutActivity.this.mActionBarHelper.onDrawerClosed();
+            if (onDrawerClosedCallback != null) {
+                delayHandler.postDelayed(() -> {
+                    onDrawerClosedCallback.onDrawerClosedCallback();
+                    onDrawerClosedCallback = null;
+                }, DRAWER_CLOSED_DELAY_MILLIS);
+            }
         }
 
         @Override
@@ -199,5 +222,29 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         mDrawerToggle.syncState();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (delayHandler != null) {
+            delayHandler.removeCallbacksAndMessages(null);
+            delayHandler = null;
+        }
+    }
 
+    private static class DelayHandler extends Handler {
+
+        private WeakReference<BaseDrawerLayoutActivity> mWeakReference;
+
+        public DelayHandler(BaseDrawerLayoutActivity clazz) {
+            mWeakReference = new WeakReference<>(clazz);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            BaseDrawerLayoutActivity clazz = mWeakReference.get();
+            if (clazz != null) {
+
+            }
+        }
+    }
 }

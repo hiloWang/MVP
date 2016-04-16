@@ -11,8 +11,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -82,6 +80,11 @@ public class MainActivity extends BaseDrawerLayoutActivity
     private DelayRunnable delayRunnable;
     private static final int PHOTO_INTO_VIEW_DELAY = 0x110;
 
+    public static void startActivity(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -133,12 +136,16 @@ public class MainActivity extends BaseDrawerLayoutActivity
 
     }
 
+    /**
+     * action bar menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_settings);
 
         if (pendingIntroAnimation) {
             pendingIntroAnimation = false;
@@ -152,16 +159,28 @@ public class MainActivity extends BaseDrawerLayoutActivity
         return item -> MainActivity.this.menuItemChecked(item.getItemId());
     }
 
+    /**
+     * nav menu
+     * @return
+     */
     @Override
     protected int[] getMenuItemIds() {
-        return new int[]{R.id.action_settings};
+        return new int[]{R.id.nav_home, R.id.nav_slideshow, R.id.nav_share, R.id.nav_send};
     }
 
     @Override
     protected void onMenuItemOnClick(MenuItem now) {
         switch (now.getItemId()) {
-            case R.id.action_settings:
-                ToastUtils.show(this, "action_settings" + now.getItemId(), 1);
+            case R.id.nav_home:
+                break;
+            case R.id.nav_slideshow:
+                setOnDrawerClosedCallback(() -> TestActivity.startActivity(this));
+                break;
+            case R.id.nav_share:
+                ToastUtils.show(this, "nav_share" + now.getItemId(), 1);
+                break;
+            case R.id.nav_send:
+                ToastUtils.show(this, "nav_send" + now.getItemId(), 1);
                 break;
         }
     }
@@ -169,6 +188,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (intent == null || intent.getAction() == null) return;
         if (intent.getAction().equals(ACTION_SHOW_LOADING_ITEM)) {
             showPhotoIntoImageViewDelayed();
             adapter.setPhotoUri(intent.getData());
@@ -190,6 +210,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
 
     @Override
     protected void onResume() {
+        setMenuChecked();
         super.onResume();
         presenter.onResume();
     }
@@ -238,17 +259,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
-        overridePendingTransition(R.anim.activity_swipeback_ac_right_in, R.anim.activity_swipeback_ac_right_remain);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        overridePendingTransition(false);
     }
 
     @Override
@@ -419,6 +430,16 @@ public class MainActivity extends BaseDrawerLayoutActivity
                 overridePendingTransition(0, 0);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(true);
+    }
+
+    private void setMenuChecked() {
+       mNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
     }
 
     static class DelayHandler extends Handler {
