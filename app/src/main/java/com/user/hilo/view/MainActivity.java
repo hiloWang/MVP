@@ -93,7 +93,6 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     protected void initViews(Bundle savedInstanceState) {
         context = this;
-        mActionBarHelper.setTitle(getString(R.string.main_toolbar_title));
         mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(() -> presenter.requestDataRefresh());
@@ -418,7 +417,8 @@ public class MainActivity extends BaseDrawerLayoutActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.del:
-                adapter.delItem(DEL_RECYCLER_ADAPTER_ITEM_POSITION);
+                if (adapter != null)
+                    adapter.delItem(DEL_RECYCLER_ADAPTER_ITEM_POSITION);
                 break;
             case R.id.add:
                 presenter.addItem();

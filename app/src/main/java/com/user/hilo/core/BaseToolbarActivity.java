@@ -43,6 +43,7 @@ public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
         if (this.toolbar == null || this.appBarLayout == null)
             return;
 
+        toolbar.setTitleTextAppearance(this, R.style.toolbarTitle);
         this.setSupportActionBar(this.toolbar);
 
         this.mActionBarHelper = this.createActionBarHelper();

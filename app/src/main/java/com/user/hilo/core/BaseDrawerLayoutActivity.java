@@ -26,7 +26,7 @@ import butterknife.Bind;
  */
 public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
 
-    private final int DRAWER_CLOSED_DELAY_MILLIS = 50;
+    private final int DRAWER_CLOSED_DELAY_MILLIS = 20;
 
     @Bind(R.id.drawer_layout)
     protected DrawerLayout mDrawerLayout;

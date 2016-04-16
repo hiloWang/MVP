@@ -151,6 +151,7 @@ public class PublishActivity extends BaseToolbarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_publish) {
             bringMainActivityToSingleTop();
+            finish();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -159,7 +160,7 @@ public class PublishActivity extends BaseToolbarActivity {
 
     private void bringMainActivityToSingleTop() {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.setAction(MainActivity.ACTION_SHOW_LOADING_ITEM);
         intent.setData(photoUri);
         startActivity(intent);

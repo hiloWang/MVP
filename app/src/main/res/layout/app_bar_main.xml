@@ -13,16 +13,25 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="6dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:theme="@style/toolbarTheme"
             app:titleTextAppearance="@style/toolbarTitle">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:layout_marginLeft="5dp"
+                      android:gravity="center_vertical"
+                      android:text="@string/main_toolbar_title"
+                      android:textColor="@color/cpb_white"
+                      android:textSize="@dimen/text_size_16"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -38,7 +47,8 @@
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
                     android:text="DEL"
-                    android:textColor="@color/cpb_white"/>
+                    android:textColor="@color/cpb_white"
+                    android:textSize="@dimen/text_size_14"/>
 
                 <TextView
                     android:id="@+id/add"
@@ -50,7 +60,8 @@
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
                     android:text="ADD"
-                    android:textColor="@color/cpb_white"/>
+                    android:textColor="@color/cpb_white"
+                    android:textSize="@dimen/text_size_14"/>
 
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
