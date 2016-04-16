@@ -122,12 +122,12 @@ public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
 
         public void onDrawerClosed() {
             if (this.mActionBar == null) return;
-            this.mActionBar.setTitle(this.mTitle);
+//            this.mActionBar.setTitle(this.mTitle);
         }
 
         public void onDrawerOpened() {
             if (this.mActionBar == null) return;
-            this.mActionBar.setTitle(this.mDrawerTitle);
+//            this.mActionBar.setTitle(this.mDrawerTitle);
         }
 
         public void setTitle(CharSequence title) {

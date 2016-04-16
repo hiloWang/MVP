@@ -15,10 +15,10 @@ import com.user.hilo.utils.UIUtils;
 /**
  * Created by Administrator on 2016/3/16.
  */
-public class TestActivity extends BaseDrawerLayoutActivity {
+public class SlideshowActivity extends BaseDrawerLayoutActivity {
 
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, TestActivity.class);
+        Intent intent = new Intent(context, SlideshowActivity.class);
         context.startActivity(intent);
     }
 
@@ -29,7 +29,7 @@ public class TestActivity extends BaseDrawerLayoutActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        mActionBarHelper.setTitle("测试Toolbar标题");
+        mActionBarHelper.setTitle(getString(R.string.slideshow_toolbar_title));
         initAnimation();
     }
 
@@ -64,7 +64,7 @@ public class TestActivity extends BaseDrawerLayoutActivity {
 
     @Override
     protected NavigationView.OnNavigationItemSelectedListener getNavigationItemSelectedListener() {
-        return item -> TestActivity.this.menuItemChecked(item.getItemId());
+        return item -> SlideshowActivity.this.menuItemChecked(item.getItemId());
     }
 
     @Override

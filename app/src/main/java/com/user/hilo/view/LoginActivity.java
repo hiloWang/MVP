@@ -44,7 +44,7 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     @Override
     protected void initViews(Bundle savedInstanceState) {
         toolbar.setNavigationIcon(android.R.color.transparent);
-        mActionBarHelper.setTitle("登录界面");
+        mActionBarHelper.setTitle(getString(R.string.login_toolbar_title));
 
         presenter = new LoginPresenter(this);
     }

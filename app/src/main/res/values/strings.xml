@@ -9,12 +9,21 @@
         <!-- 语言不需要对数字进行特殊处理 -->
         <item quantity="other">%d likes</item>
     </plurals>
+
+    <!-- Navigation Toolbar -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
+
+    <!-- LoginActivity -->
     <string name="user_name">用户名</string>
     <string name="password">密码</string>
     <string name="username_error">用户名不能为空</string>
     <string name="password_error">密码不能为空</string>
+
+    <!-- toolbar title -->
+    <string name="slideshow_toolbar_title">视频</string>
+    <string name="main_toolbar_title">主页</string>
+    <string name="login_toolbar_title">登录界面</string>
+
 </resources>

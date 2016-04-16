@@ -93,6 +93,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     protected void initViews(Bundle savedInstanceState) {
         context = this;
+        mActionBarHelper.setTitle(getString(R.string.main_toolbar_title));
         mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(() -> presenter.requestDataRefresh());
@@ -174,7 +175,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
             case R.id.nav_home:
                 break;
             case R.id.nav_slideshow:
-                setOnDrawerClosedCallback(() -> TestActivity.startActivity(this));
+                setOnDrawerClosedCallback(() -> SlideshowActivity.startActivity(this));
                 break;
             case R.id.nav_share:
                 ToastUtils.show(this, "nav_share" + now.getItemId(), 1);
@@ -346,7 +347,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     public void onItemLongClicked(View view, int position) {
         if (position + 1 == 1) {
-            Intent intent = new Intent(this, TestActivity.class);
+            Intent intent = new Intent(this, SlideshowActivity.class);
             startActivity(intent);
         }
     }

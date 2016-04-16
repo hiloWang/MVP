@@ -40,7 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".view.TestActivity"
+        <activity android:name=".view.SlideshowActivity"
                   android:launchMode="singleInstance"
                   android:screenOrientation="portrait"/>
         <activity android:name=".view.MainActivity"
