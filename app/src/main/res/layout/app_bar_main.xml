@@ -16,6 +16,8 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="6dp">
 
+        <!--     Scroll 表示向下滚动时,这个View会被滚出屏幕范围直到隐藏.
+    enterAlways 表示向上滚动时,这个View会随着滚动手势出现,直到恢复原来的位置.-->
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
