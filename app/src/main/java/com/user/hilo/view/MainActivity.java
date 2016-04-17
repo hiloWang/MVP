@@ -23,13 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.user.hilo.R;
-import com.user.hilo.adapter.config.MainAdapterItemAnimator;
 import com.user.hilo.adapter.MainRecyclerAdapter;
 import com.user.hilo.adapter.config.BorderDividerItemDecration;
+import com.user.hilo.adapter.config.MainAdapterItemAnimator;
 import com.user.hilo.bean.HomeBean;
 import com.user.hilo.core.BaseDrawerLayoutActivity;
 import com.user.hilo.presenter.MainPresenter;
-import com.user.hilo.presenter.i.IMainPresenter;
 import com.user.hilo.utils.AnimUtils;
 import com.user.hilo.utils.ToastUtils;
 import com.user.hilo.utils.UIUtils;
@@ -71,7 +70,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     CoordinatorLayout mCoordiNatorContent;
 
     private Context context;
-    private IMainPresenter presenter;
+    private MainPresenter presenter;
     private MainRecyclerAdapter adapter;
     private Animator animator;
     private int lastVisibleItem;
@@ -100,8 +99,6 @@ public class MainActivity extends BaseDrawerLayoutActivity
             mSwipeRefreshLayout.setOnRefreshListener(() -> presenter.requestData(false));
             mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
         }
-
-        presenter = new MainPresenter(this);
 
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
@@ -135,7 +132,8 @@ public class MainActivity extends BaseDrawerLayoutActivity
 
     @Override
     protected void initData() {
-
+        presenter = new MainPresenter();
+        presenter.attachView(this);
     }
 
     /**
@@ -246,6 +244,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
 
     @Override
     protected void onDestroy() {
+        presenter.detachView();
         presenter.Destroy();
         setAllRepleaseResourceFieldsNull();
         super.onDestroy();
@@ -307,6 +306,8 @@ public class MainActivity extends BaseDrawerLayoutActivity
             mRecyclerView.setItemAnimator(new MainAdapterItemAnimator());
             adapter.updateItems((List<HomeBean>) items, true);
         } else {
+            if (mSwipeRefreshLayout != null)
+                mSwipeRefreshLayout.setRefreshing(false);
             adapter.updateItems((List<HomeBean>) items, false);
         }
     }
@@ -322,12 +323,6 @@ public class MainActivity extends BaseDrawerLayoutActivity
             adapter.addItem((HomeBean) data, position);
             mRecyclerView.scrollToPosition(0);
         }
-    }
-
-    @Override
-    public void requestDataRefreshFinish(List<? extends Object> items) {
-        mSwipeRefreshLayout.setRefreshing(false);
-        adapter.updateItems((List<HomeBean>) items, false);
     }
 
     @Override
@@ -456,6 +451,11 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     public void onLoadingFinished() {
         mTakePhoto.setEnabled(true);
+    }
+
+    @Override
+    public void onFailure(Throwable e) {
+
     }
 
     static class DelayHandler extends Handler {

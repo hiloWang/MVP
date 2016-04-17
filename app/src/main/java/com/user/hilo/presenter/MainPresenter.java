@@ -1,5 +1,6 @@
 package com.user.hilo.presenter;
 
+import com.user.hilo.core.mvp.BasePresenter;
 import com.user.hilo.interfaces.OnFinishedListener;
 import com.user.hilo.model.MainModel;
 import com.user.hilo.model.i.IMainModel;
@@ -15,14 +16,12 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/3/16.
  */
-public class MainPresenter implements IMainPresenter, OnFinishedListener {
+public class MainPresenter extends BasePresenter<MainView> implements IMainPresenter, OnFinishedListener {
 
     private IMainModel model;
-    private MainView mainView;
     private int page;
 
-    public MainPresenter(MainView mainView) {
-        this.mainView = mainView;
+    public MainPresenter() {
         model = new MainModel();
     }
 
@@ -43,15 +42,15 @@ public class MainPresenter implements IMainPresenter, OnFinishedListener {
 
     @Override
     public void onItemClicked(int position) {
-        if (mainView != null) {
-            mainView.showMessage(String.format("Position %d clicked", position + 1));
+        if (getMvpView() != null) {
+            getMvpView().showMessage(String.format("Position %d clicked", position + 1));
         }
     }
 
     @Override
     public void addItem() {
-        if (mainView != null) {
-            mainView.addItem(model.getData(), 0);
+        if (getMvpView() != null) {
+            getMvpView().addItem(model.getData(), 0);
         }
     }
 
@@ -62,17 +61,17 @@ public class MainPresenter implements IMainPresenter, OnFinishedListener {
 
     @Override
     public void requestDataFirst() {
-        if (mainView != null) {
-            mainView.showProgress();
+        if (getMvpView() != null) {
+            getMvpView().showProgress();
         }
         model.FindItems(false, this);
     }
 
     @Override
     public void onFinished(boolean isLoadmoreData, List<? extends Object> items) {
-        if (mainView != null) {
-            mainView.setItems(isLoadmoreData, items);
-            mainView.hideProgress();
+        if (getMvpView() != null) {
+            getMvpView().setItems(isLoadmoreData, items);
+            getMvpView().hideProgress();
         }
     }
 

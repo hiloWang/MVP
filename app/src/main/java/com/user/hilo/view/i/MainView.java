@@ -1,11 +1,13 @@
 package com.user.hilo.view.i;
 
+import com.user.hilo.core.mvp.MvpView;
+
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/3/16.
  */
-public interface MainView {
+public interface MainView extends MvpView {
 
     void showProgress();
 
@@ -16,7 +18,5 @@ public interface MainView {
     void showMessage(String message);
 
     void addItem(Object obj, int position);
-
-    void requestDataRefreshFinish(List<? extends Object> items);
 
 }

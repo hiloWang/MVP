@@ -1,11 +1,13 @@
 package com.user.hilo.view.i;
 
+import com.user.hilo.core.mvp.MvpView;
+
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/4/17.
  */
-public interface SlideshowView {
+public interface SlideshowView extends MvpView {
 
     void showProgress();
 
@@ -17,5 +19,4 @@ public interface SlideshowView {
 
     void addItem(Object obj, int position);
 
-    void requestDataRefreshFinish(List<? extends Object> items);
 }

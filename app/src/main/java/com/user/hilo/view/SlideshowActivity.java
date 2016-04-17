@@ -18,7 +18,6 @@ import com.user.hilo.adapter.config.BorderDividerItemDecration;
 import com.user.hilo.core.BaseDrawerLayoutActivity;
 import com.user.hilo.core.BaseRecyclerViewHolder;
 import com.user.hilo.presenter.SlideshowPresenter;
-import com.user.hilo.presenter.i.ISlideshowPresenter;
 import com.user.hilo.utils.ToastUtils;
 import com.user.hilo.utils.UIUtils;
 import com.user.hilo.view.i.SlideshowView;
@@ -46,7 +45,7 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
     private BorderDividerItemDecration dataDecration;
     private LinearLayoutManager mLinearLayoutManager;
     private boolean loadingMoreData;
-    private ISlideshowPresenter presenter;
+    private SlideshowPresenter presenter;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, SlideshowActivity.class);
@@ -60,7 +59,6 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        presenter = new SlideshowPresenter(this);
         mActionBarHelper.setTitle(getString(R.string.slideshow_toolbar_title));
         initAnimation();
         setupRecyclerView();
@@ -135,6 +133,8 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
 
     @Override
     protected void initData() {
+        presenter = new SlideshowPresenter();
+        presenter.attachView(this);
         if (adapter == null) {
             adapter = new SlideshowAdapter(this);
             mRecyclerView.setAdapter(adapter);
@@ -236,6 +236,7 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
 
     @Override
     protected void onDestroy() {
+        presenter.detachView();
         super.onDestroy();
         System.gc();
     }
@@ -285,7 +286,7 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
     }
 
     @Override
-    public void requestDataRefreshFinish(List<? extends Object> items) {
+    public void onFailure(Throwable e) {
 
     }
 }

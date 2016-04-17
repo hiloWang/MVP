@@ -1,5 +1,6 @@
 package com.user.hilo.presenter;
 
+import com.user.hilo.core.mvp.BasePresenter;
 import com.user.hilo.interfaces.OnFinishedListener;
 import com.user.hilo.model.SlideshowModel;
 import com.user.hilo.model.i.ISlideshowModel;
@@ -8,19 +9,14 @@ import com.user.hilo.view.i.SlideshowView;
 
 import java.util.List;
 
-import rx.subscriptions.CompositeSubscription;
-
 /**
  * Created by Administrator on 2016/4/17.
  */
-public class SlideshowPresenter implements ISlideshowPresenter, OnFinishedListener {
+public class SlideshowPresenter extends BasePresenter<SlideshowView> implements ISlideshowPresenter, OnFinishedListener {
 
-    private SlideshowView mainView;
     private ISlideshowModel model;
-    private CompositeSubscription mCompositeSubscription;
 
-    public SlideshowPresenter(SlideshowView mainView) {
-        this.mainView = mainView;
+    public SlideshowPresenter() {
         model = new SlideshowModel();
     }
 
@@ -56,15 +52,20 @@ public class SlideshowPresenter implements ISlideshowPresenter, OnFinishedListen
 
     @Override
     public void requestDataFirst() {
-        if (mainView != null)
-            mainView.showProgress();
+        if (getMvpView() != null)
+            getMvpView().showProgress();
     }
 
     @Override
     public void onFinished(boolean isLoadmoreData, List<? extends Object> items) {
-        if (mainView != null) {
-            mainView.setItems(isLoadmoreData, items);
-            mainView.hideProgress();
+        if (getMvpView() != null) {
+            getMvpView().setItems(isLoadmoreData, items);
+            getMvpView().hideProgress();
         }
+    }
+
+    @Override
+    public void onFailure(Throwable e) {
+
     }
 }
