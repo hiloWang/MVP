@@ -146,12 +146,7 @@ public class TakePhotoActivity extends AppCompatActivity implements RevealBackgr
             mVLowerPanel.setInAnimation(this, R.anim.slide_in_from_right);
             mVUpperPanel.setOutAnimation(this, R.anim.slide_out_to_right);
             mVLowerPanel.setOutAnimation(this, R.anim.slide_out_to_right);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mIvTakenPhoto.setVisibility(View.GONE);
-                }
-            }, 400);
+            new Handler().postDelayed(() -> mIvTakenPhoto.setVisibility(View.GONE), 400);
         } else if (currentState == STATE_SETUP_PHOTO) {
             mVUpperPanel.setInAnimation(this, R.anim.slide_in_from_right);
             mVLowerPanel.setInAnimation(this, R.anim.slide_in_from_right);

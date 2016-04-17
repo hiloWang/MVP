@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- android:layout_gravity="center"
+<android.support.v7.widget.CardView android:id="@+id/card_view"
+                                    xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
                                     android:layout_margin="8dp"
                                     app:cardBackgroundColor="@android:color/transparent"
                                     app:cardCornerRadius="4dp"
                                     app:cardElevation="0dp"
                                     app:cardPreventCornerOverlap="true"
                                     app:cardUseCompatPadding="true"
-                                    app:contentPadding="1dp"-->
-<android.support.v7.widget.CardView android:id="@+id/card_view"
-                                    xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
+                                    app:contentPadding="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
