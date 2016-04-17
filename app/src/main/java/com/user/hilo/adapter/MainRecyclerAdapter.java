@@ -233,25 +233,25 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         private HomeBean entity;
 
         @Bind(R.id.tvFeedTitle)
-        TextView mTvFeedTitle;
+        public TextView mTvFeedTitle;
         @Bind(R.id.ivFeedCenter)
         public ImageView mIvFeedCenter;
         @Bind(R.id.vImageRoot)
-        SquaredFrameLayout mVImageRoot;
+        public SquaredFrameLayout mVImageRoot;
         @Bind(R.id.ivFeedBottom)
-        ImageView mIvFeedBottom;
+        public ImageView mIvFeedBottom;
         @Bind(R.id.btnLike)
-        ImageButton mBtnLike;
+        public ImageButton mBtnLike;
         @Bind(R.id.btnComments)
-        ImageButton mBtnComments;
+        public ImageButton mBtnComments;
         @Bind(R.id.btnMore)
-        ImageButton mBtnMore;
+        public ImageButton mBtnMore;
         @Bind(R.id.tsLikesCounter)
-        TextSwitcher mTsLikesCounter;
+        public TextSwitcher mTsLikesCounter;
         @Bind(R.id.vBgLike)
-        View mVBgLike;
+        public View mVBgLike;
         @Bind(R.id.ivLike)
-        ImageView mIvLike;
+        public ImageView mIvLike;
 
         public FeedViewHolder(View itemView) {
             super(itemView);

@@ -23,8 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.user.hilo.R;
-import com.user.hilo.adapter.MainAdapterItemAnimator;
+import com.user.hilo.adapter.config.MainAdapterItemAnimator;
 import com.user.hilo.adapter.MainRecyclerAdapter;
+import com.user.hilo.adapter.config.BorderDividerItemDecration;
 import com.user.hilo.bean.HomeBean;
 import com.user.hilo.core.BaseDrawerLayoutActivity;
 import com.user.hilo.presenter.MainPresenter;
@@ -75,6 +76,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     private Animator animator;
     private int lastVisibleItem;
     private LinearLayoutManager mLinearLayoutManager;
+    private BorderDividerItemDecration dataDeration;
     private boolean pendingIntroAnimation;
 
     private DelayHandler delayHandler;
@@ -94,7 +96,6 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     protected void initViews(Bundle savedInstanceState) {
         context = this;
-        mSwipeRefreshLayout = (PullRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(() -> presenter.requestDataRefresh());
             mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
@@ -279,6 +280,10 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     public void setItems(List<? extends Object> items) {
         if (adapter == null) {
+            dataDeration = new BorderDividerItemDecration(
+                    getResources().getDimensionPixelOffset(R.dimen.data_border_divider_height),
+                    getResources().getDimensionPixelOffset(R.dimen.data_border_padding_infra_spans)
+            );
             mLinearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false) {
                 // 设置更多的预留空间(在RecyclerView 的元素比较高，一屏只能显示一个元素的时候，第一次滑动到第二个元素会卡顿。)
                 @Override
@@ -286,6 +291,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
                     return 300;
                 }
             };
+            mRecyclerView.addItemDecoration(dataDeration);
             mRecyclerView.setLayoutManager(mLinearLayoutManager);
             adapter = new MainRecyclerAdapter(this);
             adapter.setOnLoadingFinishedCallback(this);

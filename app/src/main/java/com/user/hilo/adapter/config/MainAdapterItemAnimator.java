@@ -1,4 +1,4 @@
-package com.user.hilo.adapter;
+package com.user.hilo.adapter.config;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -13,6 +13,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 
 import com.user.hilo.R;
+import com.user.hilo.adapter.MainRecyclerAdapter;
 import com.user.hilo.utils.UIUtils;
 
 import java.util.HashMap;

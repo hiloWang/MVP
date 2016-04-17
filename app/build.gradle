@@ -14,6 +14,13 @@ android {
         versionName "1.0"
     }
 
+    dexOptions {
+        incremental true
+        javaMaxHeapSize "4g"
+        //关闭预编译
+        preDexLibraries = false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -56,6 +63,12 @@ dependencies {
 
     // Reservoir https://github.com/anupcowkur/Reservoir
     compile 'com.anupcowkur:reservoir:2.1'
+
+    // retrofit
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.squareup.okhttp:okhttp:2.7.0'
+    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
 
     // other
 //    compile 'com.github.orhanobut:logger:1.12'
