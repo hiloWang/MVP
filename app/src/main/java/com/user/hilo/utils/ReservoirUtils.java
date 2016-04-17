@@ -99,6 +99,10 @@ public class ReservoirUtils {
         Reservoir.getAsync(key, typeOfT, callback);
     }
 
+    public <T> void get(final String key, final Class<T> clazz, final ReservoirGetCallback<T> callback) {
+        Reservoir.getAsync(key, clazz, callback);
+    }
+
     private boolean contains(String key) {
         try {
             return Reservoir.contains(key);

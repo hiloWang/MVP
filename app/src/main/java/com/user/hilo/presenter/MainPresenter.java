@@ -7,11 +7,15 @@ import com.user.hilo.model.i.IMainModel;
 import com.user.hilo.others.Api;
 import com.user.hilo.presenter.i.IMainPresenter;
 import com.user.hilo.utils.CustomDateUtils;
+import com.user.hilo.utils.LogUtils;
 import com.user.hilo.view.i.MainView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by Administrator on 2016/3/16.
@@ -68,10 +72,30 @@ public class MainPresenter extends BasePresenter<MainView> implements IMainPrese
     }
 
     @Override
-    public void onFinished(boolean isLoadmoreData, List<? extends Object> items) {
+    public void onFinished(boolean isLoadmoreData, Observable<List<? extends Object>> items) {
         if (getMvpView() != null) {
-            getMvpView().setItems(isLoadmoreData, items);
-            getMvpView().hideProgress();
+            mCompositeSubscription.add(items.subscribe(new Subscriber<List<? extends Object>>() {
+                @Override
+                public void onCompleted() {
+                    if (mCompositeSubscription != null)
+                        mCompositeSubscription.remove(this);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    try {
+                        LogUtils.E(e.getMessage());
+                    } catch (Throwable e1) {
+                        e1.getMessage();
+                    }
+                }
+
+                @Override
+                public void onNext(List<? extends Object> dataList) {
+                    getMvpView().setItems(isLoadmoreData, dataList);
+                    getMvpView().hideProgress();
+                }
+            }));
         }
     }
 

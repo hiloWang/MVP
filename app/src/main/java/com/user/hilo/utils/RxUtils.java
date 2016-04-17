@@ -25,12 +25,9 @@
 package com.user.hilo.utils;
 
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-/**
- * Description：RxUtils
- * Created by：CaMnter
- * Time：2016-01-13 12:08
- */
 public class RxUtils {
     /**
      * {@link rx.Observable.Transformer} that transforms the source observable to subscribe in the
@@ -52,10 +49,9 @@ public class RxUtils {
      */
     @SuppressWarnings("unchecked")
     private static <T> Observable.Transformer<T, T> createIOToMainThreadScheduler() {
-//        return tObservable -> tObservable.subscribeOn(Schedulers.io())
-//                .unsubscribeOn(Schedulers.computation())
-//                .observeOn(AndroidSchedulers.mainThread());
-        return null;
+        return tObservable -> tObservable.subscribeOn(Schedulers.io())
+                .unsubscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @SuppressWarnings("unchecked")

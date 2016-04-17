@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.user.hilo.R;
+import com.user.hilo.bean.DailyBean;
 import com.user.hilo.core.BaseRecyclerViewAdapter;
 import com.user.hilo.core.BaseRecyclerViewHolder;
 import com.user.hilo.utils.DateUtils;
@@ -55,14 +56,14 @@ public class SlideshowAdapter extends BaseRecyclerViewAdapter {
     }
 
     private void bindDefault(BaseRecyclerViewHolder viewHolder, int position) {
-        String dailyBean = getItemByPosition(position);
+        DailyBean dailyBean = getItemByPosition(position);
         if (dailyBean == null) return;
 
         mDailyTitleTv = viewHolder.findViewById(R.id.daily_title_tv);
         mDailyDateTv = viewHolder.findViewById(R.id.daily_date_tv);
         mDailyIv = viewHolder.findViewById(R.id.daily_iv);
 
-        mDailyTitleTv.setText("测试内容" + dailyBean + ": 这脑洞太大我无力承受。[笑cry]");
+        mDailyTitleTv.setText("测试内容" + dailyBean.testName + ": 这脑洞太大我无力承受。[笑cry]");
         mDailyDateTv.setText(DateUtils.date2yyyyMMdd(new Date()));
         mDailyIv.setScaleX(0.f);
         mDailyIv.setScaleY(0.f);

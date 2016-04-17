@@ -7,11 +7,14 @@ import com.user.hilo.R;
 import com.user.hilo.interfaces.OnFinishedListener;
 import com.user.hilo.bean.HomeBean;
 import com.user.hilo.model.i.IMainModel;
+import com.user.hilo.utils.RxUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import rx.Observable;
 
 /**
  * Created by Administrator on 2016/3/16.
@@ -78,12 +81,13 @@ public class MainModel implements IMainModel {
         }
     }
 
-    private List<HomeBean> createArrayList() {
+    private Observable<List<? extends Object>> createArrayList() {
         List<HomeBean> entities = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             entities.add(new HomeBean("subject " + i, 0, false, mipmap[i > 7 ? (int) (Math.random() * 8) : i]));
         }
-        return entities;
+        return Observable.just(entities)
+                .compose(RxUtils.applyIOToMainThreadSchedulers());
     }
 
     private Runnable requestDataRunnable = new Runnable() {

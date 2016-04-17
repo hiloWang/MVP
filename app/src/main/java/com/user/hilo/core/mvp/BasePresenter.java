@@ -1,7 +1,5 @@
 package com.user.hilo.core.mvp;
 
-import com.user.hilo.data.DataManager;
-
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -11,14 +9,12 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
 
     private T mMvpView;
     public CompositeSubscription mCompositeSubscription;
-    public DataManager mDataManager;
 
 
     @Override
     public void attachView(T mvpView) {
         this.mMvpView = mvpView;
         this.mCompositeSubscription = new CompositeSubscription();
-        this.mDataManager = DataManager.getInstance();
     }
 
     @Override
@@ -26,16 +22,19 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
         this.mMvpView = null;
         this.mCompositeSubscription.unsubscribe();
         this.mCompositeSubscription = null;
-        this.mDataManager = null;
     }
 
-    public boolean isViewAttached() {return mMvpView != null;}
+    public boolean isViewAttached() {
+        return mMvpView != null;
+    }
 
     public void checkViewAttached() {
         if (!isViewAttached()) throw new MvpViewNotAttachedException();
     }
 
-    public T getMvpView() {return mMvpView;}
+    public T getMvpView() {
+        return mMvpView;
+    }
 
     public static class MvpViewNotAttachedException extends RuntimeException {
         public MvpViewNotAttachedException() {
