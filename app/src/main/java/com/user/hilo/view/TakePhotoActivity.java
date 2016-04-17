@@ -285,12 +285,7 @@ public class TakePhotoActivity extends AppCompatActivity implements RevealBackgr
 
         @Override
         public void saveImage(PictureTransaction xact, final Bitmap bitmap) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    showTakenPicture(bitmap);
-                }
-            });
+            runOnUiThread(() -> showTakenPicture(bitmap));
         }
 
         @Override

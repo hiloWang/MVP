@@ -62,24 +62,21 @@ public class LoadingFeedItemView extends FrameLayout {
                 return true;
             }
         });
-        mVSendingProgress.setOnLoadingFinishedListener(new SendingProgressView.OnLoadingFinishedListener() {
-            @Override
-            public void onLoadingFinished() {
-                mVSendingProgress.animate().scaleX(0.f).scaleY(0.f).setDuration(200).setStartDelay(100);
-                mVProgressBg.animate().alpha(0).setDuration(200).setStartDelay(100)
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                mVSendingProgress.setScaleX(1.f);
-                                mVSendingProgress.setScaleY(1.f);
-                                mVProgressBg.setAlpha(1);
-                                if (onLoadingFinishedListener != null) {
-                                    onLoadingFinishedListener.onLoadingFinished();
-                                    onLoadingFinishedListener = null;
-                                }
+        mVSendingProgress.setOnLoadingFinishedListener(() -> {
+            mVSendingProgress.animate().scaleX(0.f).scaleY(0.f).setDuration(200).setStartDelay(100);
+            mVProgressBg.animate().alpha(0).setDuration(200).setStartDelay(100)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mVSendingProgress.setScaleX(1.f);
+                            mVSendingProgress.setScaleY(1.f);
+                            mVProgressBg.setAlpha(1);
+                            if (onLoadingFinishedListener != null) {
+                                onLoadingFinishedListener.onLoadingFinished();
+                                onLoadingFinishedListener = null;
                             }
-                        }).start();
-            }
+                        }
+                    }).start();
         });
     }
 

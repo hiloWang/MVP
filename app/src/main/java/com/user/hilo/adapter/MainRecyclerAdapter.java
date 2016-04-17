@@ -146,14 +146,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
     }
 
+    private LoadingFeedItemView.OnLoadingFinishedListener onLoadingFinishedCallback;
+    public void setOnLoadingFinishedCallback(LoadingFeedItemView.OnLoadingFinishedListener onLoadingFinishedCallback) {
+        this.onLoadingFinishedCallback = onLoadingFinishedCallback;
+    }
+
     private void bindLoadingFeedItem(final LoadingFeedViewHolder holder) {
-        holder.loadingFeedItemView.setOnLoadingFinishedListener(new LoadingFeedItemView.OnLoadingFinishedListener() {
-            @Override
-            public void onLoadingFinished() {
-                showLoadingView = false;
+        holder.loadingFeedItemView.setOnLoadingFinishedListener(() -> {
+            showLoadingView = false;
 //                notifyItemChanged(0);
-                notifyDataSetChanged();
-            }
+            notifyDataSetChanged();
+            if (onLoadingFinishedCallback != null)
+                onLoadingFinishedCallback.onLoadingFinished();
         });
         holder.loadingFeedItemView.startLoading();
     }

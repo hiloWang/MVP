@@ -46,8 +46,10 @@ public class PublishActivity extends BaseToolbarActivity {
     private int photoSize;
     private Uri photoUri;
     private boolean propagatingToggleStatu;
+    private static Activity prebackActivity;
 
     public static void openWithPhotoUri(Activity startingActivity, Uri photoUri) {
+        prebackActivity = startingActivity;
         Intent intent = new Intent(startingActivity, PublishActivity.class);
         intent.putExtra(ARG_TAKEN_PHOTO_URI, photoUri);
         startingActivity.startActivity(intent);
@@ -151,6 +153,10 @@ public class PublishActivity extends BaseToolbarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_publish) {
             bringMainActivityToSingleTop();
+            if (prebackActivity != null) {
+                prebackActivity.finish();
+                prebackActivity = null;
+            }
             finish();
             return true;
         } else {

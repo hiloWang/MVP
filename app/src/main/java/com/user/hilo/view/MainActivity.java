@@ -35,6 +35,7 @@ import com.user.hilo.utils.UIUtils;
 import com.user.hilo.view.i.MainView;
 import com.user.hilo.widget.FeedContextMenu;
 import com.user.hilo.widget.FeedContextMenuManager;
+import com.user.hilo.widget.LoadingFeedItemView;
 import com.user.hilo.widget.pulltorefresh.PullRefreshLayout;
 
 import java.lang.ref.WeakReference;
@@ -44,7 +45,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 
 public class MainActivity extends BaseDrawerLayoutActivity
-        implements MainView, MainRecyclerAdapter.OnFeedItemClickListener, FeedContextMenu.OnFeedContextMenuClickListener {
+        implements MainView, MainRecyclerAdapter.OnFeedItemClickListener, FeedContextMenu.OnFeedContextMenuClickListener, LoadingFeedItemView.OnLoadingFinishedListener {
 
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
     private static final int ANIM_DURATION_TOOLBAR = 300;
@@ -190,6 +191,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
         super.onNewIntent(intent);
         if (intent == null || intent.getAction() == null) return;
         if (intent.getAction().equals(ACTION_SHOW_LOADING_ITEM)) {
+            mTakePhoto.setEnabled(false);
             showPhotoIntoImageViewDelayed();
             adapter.setPhotoUri(intent.getData());
         }
@@ -286,6 +288,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
             };
             mRecyclerView.setLayoutManager(mLinearLayoutManager);
             adapter = new MainRecyclerAdapter(this);
+            adapter.setOnLoadingFinishedCallback(this);
             adapter.setOnFeedItemClickListener(this);
             // false: 即使是已缓存的数据 也会有动画, 默认是true
             // scaleAdapter.setFirstOnly(false);
@@ -441,6 +444,11 @@ public class MainActivity extends BaseDrawerLayoutActivity
 
     private void setMenuChecked() {
        mNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
+    }
+
+    @Override
+    public void onLoadingFinished() {
+        mTakePhoto.setEnabled(true);
     }
 
     static class DelayHandler extends Handler {
