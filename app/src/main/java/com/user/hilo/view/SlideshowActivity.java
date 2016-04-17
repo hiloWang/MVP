@@ -21,7 +21,6 @@ import com.user.hilo.presenter.SlideshowPresenter;
 import com.user.hilo.utils.ToastUtils;
 import com.user.hilo.utils.UIUtils;
 import com.user.hilo.view.i.SlideshowView;
-import com.user.hilo.widget.FeedContextMenuManager;
 import com.user.hilo.widget.pulltorefresh.PullRefreshLayout;
 
 import java.util.List;
@@ -124,9 +123,6 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
                     // 停止滑动或者向上滑动
                     this.moveToDown = false;
                 }
-
-                // 弹出的ContextMenu跟随之前的窗体滚动
-                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
             }
         });
     }

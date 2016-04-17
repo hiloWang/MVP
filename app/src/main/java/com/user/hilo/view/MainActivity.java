@@ -72,9 +72,9 @@ public class MainActivity extends BaseDrawerLayoutActivity
     private MainPresenter presenter;
     private MainRecyclerAdapter adapter;
     private Animator animator;
-    private int lastVisibleItem;
     private LinearLayoutManager mLinearLayoutManager;
     private boolean pendingIntroAnimation;
+    private boolean loadingMoreData;
 
     private DelayHandler delayHandler;
     private DelayRunnable delayRunnable;
@@ -106,24 +106,47 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     protected void initListeners() {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private boolean moveToDown = false;
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                // SCROLL_STATE_IDLE 滑翔状态
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
-                    // 当滚动到最后一条时的逻辑处理
-                    Toast.makeText(context, "没有数据可加载", Toast.LENGTH_SHORT).show();
-                } else if (mLinearLayoutManager.findFirstVisibleItemPosition() == 0) {
+                if (loadingMoreData) return;
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager manager = (LinearLayoutManager) layoutManager;
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) { // SCROLL_STATE_IDLE 滑翔状态
+                        if (moveToDown && manager.findLastCompletelyVisibleItemPosition() == (manager.getItemCount() - 1)) {
+                            loadingMoreData = true;
+                            // 当滚动到最后一条时的逻辑处理
+                            mProgressBar.setVisibility(View.VISIBLE);
+                            // TODO:可能会引起内容泄漏，此段代码仅供测试，实战中请用软引用SoftRefrence或者弱引用WeakRefrence;
+                            new Handler().postDelayed(() -> {
+                                loadingMoreData = false;
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(context, "没有数据可加载", Toast.LENGTH_SHORT).show();
+                            }, 1000);
+                        } else if (mLinearLayoutManager.findFirstVisibleItemPosition() == 0) {
 
+                        }
+                    }
                 }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                /*
+                 * dy 表示y轴滑动方向
+                 * dx 表示x轴滑动方向
+                 */
+                if (dy > 0) {
+                    // 正在向下滑动
+                    this.moveToDown = true;
+                } else {
+                    // 停止滑动或者向上滑动
+                    this.moveToDown = false;
+                }
+
                 // 弹出的ContextMenu跟随之前的窗体滚动
                 FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-                if (recyclerView != null && recyclerView.getChildCount() > 0)
-                    lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
             }
         });
     }
