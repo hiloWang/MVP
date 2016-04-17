@@ -11,18 +11,18 @@ import com.user.hilo.view.i.LoginView;
  */
 public class LoginPresenter implements ILoginPresenter, OnLoginFinishedListener {
 
-    private LoginView loginView;
+    private LoginView mainView;
     private ILoginModel model;
 
-    public LoginPresenter(LoginView loginView) {
-        this.loginView = loginView;
+    public LoginPresenter(LoginView mainView) {
+        this.mainView = mainView;
 
         model = new LoginModel();
     }
 
     @Override
     public void validateCredentials(String username, String password) {
-        if (loginView != null) {
+        if (mainView != null) {
             model.login(username, password, this);
         }
     }
@@ -30,7 +30,7 @@ public class LoginPresenter implements ILoginPresenter, OnLoginFinishedListener 
     @Override
     public void onDestroy() {
         model.onDestroy();
-        loginView = null;
+        mainView = null;
     }
 
     @Override
@@ -40,25 +40,25 @@ public class LoginPresenter implements ILoginPresenter, OnLoginFinishedListener 
 
     @Override
     public void onPause() {
-        if (loginView != null) {
-            loginView.hideProgress();
+        if (mainView != null) {
+            mainView.hideProgress();
         }
     }
 
 
     @Override
     public void onUsernameError() {
-        if (loginView != null) {
-            loginView.setUsernameError();
-            loginView.hideProgress();
+        if (mainView != null) {
+            mainView.setUsernameError();
+            mainView.hideProgress();
         }
     }
 
     @Override
     public void onPasswordError() {
-        if (loginView != null) {
-            loginView.setPasswordError();
-            loginView.hideProgress();
+        if (mainView != null) {
+            mainView.setPasswordError();
+            mainView.hideProgress();
         }
     }
 
@@ -66,18 +66,18 @@ public class LoginPresenter implements ILoginPresenter, OnLoginFinishedListener 
     public void validateStatus(int status) {
         switch (status) {
             case LoginModel.VALIDATE_SUCCESS:
-                loginView.showProgress();
+                mainView.showProgress();
                 break;
             case LoginModel.SERVER_ERROR:
-                loginView.serverError();
+                mainView.serverError();
                 break;
         }
     }
 
     @Override
     public void onSuccess() {
-        if (loginView != null) {
-            loginView.navigateToHome();
+        if (mainView != null) {
+            mainView.navigateToHome();
         }
     }
 }

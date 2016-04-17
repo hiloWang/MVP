@@ -17,12 +17,14 @@ import com.user.hilo.adapter.SlideshowAdapter;
 import com.user.hilo.adapter.config.BorderDividerItemDecration;
 import com.user.hilo.core.BaseDrawerLayoutActivity;
 import com.user.hilo.core.BaseRecyclerViewHolder;
+import com.user.hilo.presenter.SlideshowPresenter;
+import com.user.hilo.presenter.i.ISlideshowPresenter;
 import com.user.hilo.utils.ToastUtils;
 import com.user.hilo.utils.UIUtils;
+import com.user.hilo.view.i.SlideshowView;
 import com.user.hilo.widget.FeedContextMenuManager;
 import com.user.hilo.widget.pulltorefresh.PullRefreshLayout;
 
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -30,7 +32,7 @@ import butterknife.Bind;
 /**
  * Created by Administrator on 2016/3/16.
  */
-public class SlideshowActivity extends BaseDrawerLayoutActivity implements BaseRecyclerViewHolder.OnItemClickListener, BaseRecyclerViewHolder.OnItemLongClickListener {
+public class SlideshowActivity extends BaseDrawerLayoutActivity implements SlideshowView, BaseRecyclerViewHolder.OnItemClickListener, BaseRecyclerViewHolder.OnItemLongClickListener {
 
     @Bind(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -40,11 +42,11 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements BaseR
     ProgressBar mProgressBar;
 
     private SlideshowAdapter adapter;
-    private int lastVisibleItem;
 
     private BorderDividerItemDecration dataDecration;
     private LinearLayoutManager mLinearLayoutManager;
     private boolean loadingMoreData;
+    private ISlideshowPresenter presenter;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, SlideshowActivity.class);
@@ -58,6 +60,7 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements BaseR
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        presenter = new SlideshowPresenter(this);
         mActionBarHelper.setTitle(getString(R.string.slideshow_toolbar_title));
         initAnimation();
         setupRecyclerView();
@@ -69,7 +72,7 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements BaseR
                 getResources().getDimensionPixelOffset(R.dimen.data_border_padding_infra_spans)
         );
         mRecyclerView.addItemDecoration(dataDecration);
-        mLinearLayoutManager = /*(LinearLayoutManager) mRecyclerView.getLayoutManager();*/ new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
     }
@@ -78,38 +81,54 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements BaseR
     protected void initListeners() {
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setOnRefreshListener(() -> {
-                requestData(false);
+                presenter.requestData(false);
             });
             mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
         }
 
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private boolean moveToDown = false;
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
                 if (loadingMoreData) return;
-                // SCROLL_STATE_IDLE 滑翔状态
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
-                    loadingMoreData = true;
-                    // 当滚动到最后一条时的逻辑处理
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    // TODO:可能会引起内容泄漏，此段代码仅供测试，实战中请用软引用SoftRefrence或者弱引用WeakRefrence;
-                    new Handler().postDelayed(() -> {
-                        loadingMoreData = false;
-                        mProgressBar.setVisibility(View.INVISIBLE);
-                        requestData(true);
-                    }, 1000);
-                } else if (mLinearLayoutManager.findFirstVisibleItemPosition() == 0) {
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager manager = (LinearLayoutManager) layoutManager;
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) { // SCROLL_STATE_IDLE 滑翔状态
+                        if (moveToDown && manager.findLastCompletelyVisibleItemPosition() == (manager.getItemCount() - 1)) {
+                            loadingMoreData = true;
+                            // 当滚动到最后一条时的逻辑处理
+                            mProgressBar.setVisibility(View.VISIBLE);
+                            // TODO:可能会引起内容泄漏，此段代码仅供测试，实战中请用软引用SoftRefrence或者弱引用WeakRefrence;
+                            new Handler().postDelayed(() -> {
+                                loadingMoreData = false;
+                                mProgressBar.setVisibility(View.INVISIBLE);
+                                presenter.requestData(true);
+                            }, 1000);
+                        } else if (mLinearLayoutManager.findFirstVisibleItemPosition() == 0) {
 
+                        }
+                    }
                 }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                /*
+                 * dy 表示y轴滑动方向
+                 * dx 表示x轴滑动方向
+                 */
+                if (dy > 0) {
+                    // 正在向下滑动
+                    this.moveToDown = true;
+                } else {
+                    // 停止滑动或者向上滑动
+                    this.moveToDown = false;
+                }
+
                 // 弹出的ContextMenu跟随之前的窗体滚动
                 FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-                if (recyclerView != null && recyclerView.getChildCount() > 0)
-                    lastVisibleItem = mLinearLayoutManager.findLastVisibleItemPosition();
             }
         });
     }
@@ -128,13 +147,14 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements BaseR
     protected void onPause() {
         super.onPause();
         setRefreshing(false);
+        hideProgress();
     }
 
     @Override
     protected void onResume() {
         setMenuChecked();
         super.onResume();
-        requestData(false);
+        presenter.requestData(false);
     }
 
     @Override
@@ -178,28 +198,16 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements BaseR
         }
     }
 
-    private void requestData(boolean loadingMoreData) {
+    private void feedAdapter(boolean loadingMoreData, List<? extends Object> items) {
         setRefreshing(false);
         if (adapter != null) {
-            List dataLists = Arrays.asList(new String("AA"),
-                    new String("BB"),
-                    new String("CC"),
-                    new String("DD"),
-                    new String("EE"),
-                    new String("FF"),
-                    new String("GG"),
-                    new String("HH"),
-                    new String("II"),
-                    new String("JJ"),
-                    new String("KK"));
-
             if (loadingMoreData) {
                 int smoothScrollToPosition = adapter.getItemCount();
-                adapter.addAll(dataLists);
+                adapter.addAll(items);
                 mRecyclerView.smoothScrollToPosition(smoothScrollToPosition);
                 adapter.notifyItemChanged(adapter.getItemCount());
             } else {
-                adapter.setList(dataLists);
+                adapter.setList(items);
                 adapter.notifyDataSetChanged();
             }
         }
@@ -249,5 +257,35 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements BaseR
     public void setRefreshing(boolean refreshing) {
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(refreshing);
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void setItems(boolean loadingMoreData, List<? extends Object> items) {
+        feedAdapter(loadingMoreData, items);
+    }
+
+    @Override
+    public void showMessage(String message) {
+
+    }
+
+    @Override
+    public void addItem(Object obj, int position) {
+
+    }
+
+    @Override
+    public void requestDataRefreshFinish(List<? extends Object> items) {
+
     }
 }

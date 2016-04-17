@@ -4,10 +4,12 @@ import com.user.hilo.interfaces.OnFinishedListener;
 
 import java.util.List;
 
+import rx.Observable;
+
 /**
- * Created by Administrator on 2016/3/16.
+ * Created by Administrator on 2016/4/17.
  */
-public interface IMainModel {
+public interface ISlideshowModel {
 
     void FindItems(boolean isLoadmoreData, OnFinishedListener onFinishedListener);
 
@@ -15,8 +17,7 @@ public interface IMainModel {
 
     void onDestroy();
 
-    Object getData();
+    Observable<Object> getData();
 
-    List<? extends Object> getItems();
-
+    Observable<List<? extends Object>> getItems();
 }

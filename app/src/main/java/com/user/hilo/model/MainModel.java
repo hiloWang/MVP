@@ -20,15 +20,17 @@ public class MainModel implements IMainModel {
 
     private RequestDataHandler mHandler;
     private OnFinishedListener onFinishedListener;
+    private boolean isLoadmoreData;
     private static final int[] mipmap = {
             R.mipmap.center_6, R.mipmap.center_2, R.mipmap.center_3, R.mipmap.center_1, R.mipmap.center_5,
             R.mipmap.center_4, R.mipmap.center_7, R.mipmap.center_8
     };
 
     @Override
-    public void FindItems(OnFinishedListener onFinishedListener) {
+    public void FindItems(boolean isLoadmoreData, OnFinishedListener onFinishedListener) {
         if (onFinishedListener == null)
             throw new NullPointerException("must be implements OnFinishedListener");
+        this.isLoadmoreData = isLoadmoreData;
         this.onFinishedListener = onFinishedListener;
         if (mHandler == null) {
             mHandler = new RequestDataHandler(this);
@@ -87,7 +89,7 @@ public class MainModel implements IMainModel {
     private Runnable requestDataRunnable = new Runnable() {
         @Override
         public void run() {
-            onFinishedListener.onFinished(createArrayList());
+            onFinishedListener.onFinished(isLoadmoreData, createArrayList());
         }
     };
 

@@ -97,7 +97,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     protected void initViews(Bundle savedInstanceState) {
         context = this;
         if (mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.setOnRefreshListener(() -> presenter.requestDataRefresh());
+            mSwipeRefreshLayout.setOnRefreshListener(() -> presenter.requestData(false));
             mSwipeRefreshLayout.setRefreshStyle(PullRefreshLayout.STYLE_MATERIAL);
         }
 
@@ -230,6 +230,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
         }
         if (mSwipeRefreshLayout != null)
             mSwipeRefreshLayout.setRefreshing(false);
+        hideProgress();
         presenter.onPause();
     }
 
@@ -278,7 +279,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     }
 
     @Override
-    public void setItems(List<? extends Object> items) {
+    public void setItems(boolean isLoadmoreData, List<? extends Object> items) {
         if (adapter == null) {
             dataDeration = new BorderDividerItemDecration(
                     getResources().getDimensionPixelOffset(R.dimen.data_border_divider_height),

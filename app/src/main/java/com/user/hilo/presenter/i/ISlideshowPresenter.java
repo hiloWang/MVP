@@ -1,9 +1,9 @@
 package com.user.hilo.presenter.i;
 
 /**
- * Created by Administrator on 2016/3/16.
+ * Created by Administrator on 2016/4/17.
  */
-public interface IMainPresenter {
+public interface ISlideshowPresenter {
 
     void onResume();
 

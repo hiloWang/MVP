@@ -7,6 +7,6 @@ import java.util.List;
  */
 public interface OnFinishedListener {
 
-    void onFinished(List<? extends Object> items);
+    void onFinished(boolean isLoadmoreData, List<? extends Object> items);
 
 }

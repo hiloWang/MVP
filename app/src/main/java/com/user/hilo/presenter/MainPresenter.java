@@ -38,9 +38,7 @@ public class MainPresenter implements IMainPresenter, OnFinishedListener {
 
     @Override
     public void onPause() {
-        if (mainView != null) {
-            mainView.hideProgress();
-        }
+
     }
 
     @Override
@@ -58,10 +56,8 @@ public class MainPresenter implements IMainPresenter, OnFinishedListener {
     }
 
     @Override
-    public void requestDataRefresh() {
-        if (mainView != null) {
-            mainView.requestDataRefreshFinish(model.getItems());
-        }
+    public void requestData(boolean isLoadmoreData) {
+        model.FindItems(isLoadmoreData, this);
     }
 
     @Override
@@ -69,19 +65,15 @@ public class MainPresenter implements IMainPresenter, OnFinishedListener {
         if (mainView != null) {
             mainView.showProgress();
         }
-        model.FindItems(this);
+        model.FindItems(false, this);
     }
 
     @Override
-    public void onFinished(List<? extends Object> items) {
+    public void onFinished(boolean isLoadmoreData, List<? extends Object> items) {
         if (mainView != null) {
-            mainView.setItems(items);
+            mainView.setItems(isLoadmoreData, items);
             mainView.hideProgress();
         }
-    }
-
-    public void getDaily(final boolean refresh, final int oldPage) {
-        
     }
 
     public class TodayDate {
