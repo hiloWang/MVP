@@ -92,7 +92,7 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
                 RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                 if (layoutManager instanceof LinearLayoutManager) {
                     LinearLayoutManager manager = (LinearLayoutManager) layoutManager;
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) { // SCROLL_STATE_IDLE 滑翔状态
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                         if (moveToDown && manager.findLastCompletelyVisibleItemPosition() == (manager.getItemCount() - 1)) {
                             loadingMoreData = true;
                             // 当滚动到最后一条时的逻辑处理
@@ -112,10 +112,6 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                /*
-                 * dy 表示y轴滑动方向
-                 * dx 表示x轴滑动方向
-                 */
                 if (dy > 0) {
                     // 正在向下滑动
                     this.moveToDown = true;
@@ -200,7 +196,7 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
             if (loadingMoreData) {
                 int smoothScrollToPosition = adapter.getItemCount();
                 adapter.addAll(items);
-                mRecyclerView.smoothScrollToPosition(smoothScrollToPosition);
+                mRecyclerView.scrollToPosition(smoothScrollToPosition);
                 adapter.notifyItemChanged(adapter.getItemCount());
             } else {
                 adapter.setList(items);

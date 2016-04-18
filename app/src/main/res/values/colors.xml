@@ -70,8 +70,8 @@
 
     <color name="md_edittext_error">#DD2C00</color>
 
-    <color name="btn_send_normal">#02c754</color>
-    <color name="btn_send_pressed">#006633</color>
+    <color name="btn_send_normal">@color/bule_title</color>
+    <color name="btn_send_pressed">@color/lightskyblue</color>
     <color name="btn_default_light_pressed">#40ffffff</color>
     <color name="btn_default_light_normal">#00000000</color>
 
