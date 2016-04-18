@@ -46,18 +46,19 @@ public class Api {
         okHttpClient.setReadTimeout(7676, TimeUnit.MILLISECONDS);
 
         /**
-         * 检查网络请求情况
+         * 检查网络请求情况, 添加拦截器
          */
-        if (LogUtils.DEBUG) {
-            okHttpClient.interceptors().add(chain -> {
-                Response response = chain.proceed(chain.request());
-                LogUtils.I(chain.request().urlString());
-                return response;
-            });
-        }
+        okHttpClient.interceptors().add(chain -> {
+            Response response = chain.proceed(chain.request());
+            LogUtils.I(chain.request().urlString());
+            return response;
+        });
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                // 默认Call<T>模式定义接口，导入这俩个包compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta1' compile 'io.reactivex:rxandroid:1.0.1'，
+                // 则可以使用Observable作为返回值，你可以完全像RxJava那样使用它，
+                // 如果你想让subscribe部分的代码在主线程被调用，需要把observeOn(AndroidSchedulers.mainThread())添加到链表中。
                 .addConverterFactory(GsonConverterFactory.create(MyApplication.gson))
                 .client(okHttpClient)
                 .build();

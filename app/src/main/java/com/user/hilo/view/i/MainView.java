@@ -4,6 +4,8 @@ import com.user.hilo.core.mvp.MvpView;
 
 import java.util.List;
 
+import rx.Observable;
+
 /**
  * Created by Administrator on 2016/3/16.
  */
@@ -17,6 +19,6 @@ public interface MainView extends MvpView {
 
     void showMessage(String message);
 
-    void addItem(Object obj, int position);
+    void addItem(Object data, int position);
 
 }

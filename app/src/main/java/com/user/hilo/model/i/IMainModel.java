@@ -4,6 +4,8 @@ import com.user.hilo.interfaces.OnFinishedListener;
 
 import java.util.List;
 
+import rx.Observable;
+
 /**
  * Created by Administrator on 2016/3/16.
  */
@@ -11,12 +13,8 @@ public interface IMainModel {
 
     void FindItems(boolean isLoadmoreData, OnFinishedListener onFinishedListener);
 
-    void OnError();
+    Observable<? extends Object> getData();
 
-    void onDestroy();
-
-    Object getData();
-
-    List<? extends Object> getItems();
+    Observable<List<? extends Object>> getItems();
 
 }

@@ -42,6 +42,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import rx.Observable;
 
 public class MainActivity extends BaseDrawerLayoutActivity
         implements MainView, MainRecyclerAdapter.OnFeedItemClickListener, FeedContextMenu.OnFeedContextMenuClickListener, LoadingFeedItemView.OnLoadingFinishedListener {
@@ -269,7 +270,6 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     protected void onDestroy() {
         presenter.detachView();
-        presenter.Destroy();
         setAllRepleaseResourceFieldsNull();
         super.onDestroy();
         System.gc();

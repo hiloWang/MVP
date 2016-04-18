@@ -35,11 +35,6 @@ public class MainPresenter extends BasePresenter<MainView> implements IMainPrese
     }
 
     @Override
-    public void Destroy() {
-        model.onDestroy();
-    }
-
-    @Override
     public void onPause() {
 
     }
@@ -54,7 +49,7 @@ public class MainPresenter extends BasePresenter<MainView> implements IMainPrese
     @Override
     public void addItem() {
         if (getMvpView() != null) {
-            getMvpView().addItem(model.getData(), 0);
+            model.getData().subscribe(o -> getMvpView().addItem(o, 0));
         }
     }
 

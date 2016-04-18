@@ -7,8 +7,6 @@ public interface IMainPresenter {
 
     void onResume();
 
-    void Destroy();
-
     void onPause();
 
     void onItemClicked(int position);
