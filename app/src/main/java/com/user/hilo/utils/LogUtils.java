@@ -12,7 +12,7 @@ public class LogUtils {
      * 为false，即使不把代码中的LogUtils方法删除或者注释掉，也可以让它不再打印信息
      */
 //    private static boolean DEBUG = MyApplication.mContext.getResources().getString(R.string.logcat).equals("true") ? true : false;
-    private static boolean DEBUG = true;
+    public static boolean DEBUG = true;
 
     //false 表示取消打印 的测试log日志
     private static String AUTHOR = "hilo";

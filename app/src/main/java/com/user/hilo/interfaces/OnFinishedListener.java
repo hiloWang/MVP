@@ -7,8 +7,8 @@ import rx.Observable;
 /**
  * Created by Administrator on 2016/3/16.
  */
-public interface OnFinishedListener {
+public interface OnFinishedListener<T> {
 
-    void onFinished(boolean isLoadmoreData, Observable<List<? extends Object>> items);
+    void onFinished(boolean isLoadmoreData, Observable<T> items);
 
 }

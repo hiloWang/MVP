@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/4/17.
  */
-public interface SlideshowView extends MvpView {
+public interface SlidelistView extends MvpView {
 
     void showProgress();
 
@@ -16,7 +16,5 @@ public interface SlideshowView extends MvpView {
     void setItems(boolean loadingMoreData, List<? extends Object> items);
 
     void showMessage(String message);
-
-    void addItem(Object obj, int position);
 
 }

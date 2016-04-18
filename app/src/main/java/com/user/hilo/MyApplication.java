@@ -8,8 +8,7 @@ import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.leakcanary.LeakCanary;
-import com.user.hilo.BuildConfig;
-import com.user.hilo.others.Api;
+import com.user.hilo.api.Api;
 import com.user.hilo.others.Configurations;
 import com.user.hilo.receiver.CrashHandler;
 import com.user.hilo.utils.LogUtils;
@@ -21,11 +20,12 @@ import com.user.hilo.utils.UIUtils;
 public class MyApplication extends Application {
 
     public static Context mContext;
-    public Gson gson;
+    public static Gson gson;
     //    public static Typeface font;
     public static final long ONE_KB = 1024L;
     public static final long ONE_MB = ONE_KB * 1024L;
     public static final long CACHE_DATA_MAX_SIZE = ONE_MB * 3L;
+    private static MyApplication instance;
 
     @Override
     public void onCreate() {

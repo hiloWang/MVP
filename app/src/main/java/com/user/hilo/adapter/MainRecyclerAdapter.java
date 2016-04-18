@@ -167,12 +167,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     private void setupClickableViews(final View view, final FeedViewHolder cellFeedViewHolder) {
-        cellFeedViewHolder.mBtnMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFeedItemClickListener.onMoreClick(v, cellFeedViewHolder.getLayoutPosition());
-            }
-        });
+        cellFeedViewHolder.mBtnMore.setOnClickListener(v -> onFeedItemClickListener.onMoreClick(v, cellFeedViewHolder.getLayoutPosition()));
         cellFeedViewHolder.mBtnComments.setOnClickListener(new OnNoDoubleClickListener() {
             @Override
             protected void onNoDoubleClickListener(View v) {

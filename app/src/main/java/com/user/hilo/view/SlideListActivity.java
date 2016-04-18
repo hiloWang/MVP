@@ -13,14 +13,15 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.user.hilo.R;
-import com.user.hilo.adapter.SlideshowAdapter;
+import com.user.hilo.adapter.SlidelistAdapter;
 import com.user.hilo.adapter.config.BorderDividerItemDecration;
 import com.user.hilo.core.BaseDrawerLayoutActivity;
 import com.user.hilo.core.BaseRecyclerViewHolder;
-import com.user.hilo.presenter.SlideshowPresenter;
+import com.user.hilo.presenter.SlidelistPresenter;
+import com.user.hilo.utils.LogUtils;
 import com.user.hilo.utils.ToastUtils;
 import com.user.hilo.utils.UIUtils;
-import com.user.hilo.view.i.SlideshowView;
+import com.user.hilo.view.i.SlidelistView;
 import com.user.hilo.widget.pulltorefresh.PullRefreshLayout;
 
 import java.util.List;
@@ -30,7 +31,7 @@ import butterknife.Bind;
 /**
  * Created by Administrator on 2016/3/16.
  */
-public class SlideshowActivity extends BaseDrawerLayoutActivity implements SlideshowView, BaseRecyclerViewHolder.OnItemClickListener, BaseRecyclerViewHolder.OnItemLongClickListener {
+public class SlideListActivity extends BaseDrawerLayoutActivity implements SlidelistView, BaseRecyclerViewHolder.OnItemClickListener, BaseRecyclerViewHolder.OnItemLongClickListener {
 
     @Bind(R.id.recyclerView)
     RecyclerView mRecyclerView;
@@ -39,26 +40,26 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
     @Bind(R.id.progressBar)
     ProgressBar mProgressBar;
 
-    private SlideshowAdapter adapter;
+    private SlidelistAdapter adapter;
 
     private BorderDividerItemDecration dataDecration;
     private LinearLayoutManager mLinearLayoutManager;
     private boolean loadingMoreData;
-    private SlideshowPresenter presenter;
+    private SlidelistPresenter presenter;
 
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, SlideshowActivity.class);
+        Intent intent = new Intent(context, SlideListActivity.class);
         context.startActivity(intent);
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_slideshow;
+        return R.layout.activity_slidelist;
     }
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        mActionBarHelper.setTitle(getString(R.string.slideshow_toolbar_title));
+        mActionBarHelper.setTitle(getString(R.string.slidelist_toolbar_title));
         initAnimation();
         setupRecyclerView();
     }
@@ -125,10 +126,10 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
 
     @Override
     protected void initData() {
-        presenter = new SlideshowPresenter();
+        presenter = new SlidelistPresenter();
         presenter.attachView(this);
         if (adapter == null) {
-            adapter = new SlideshowAdapter(this);
+            adapter = new SlidelistAdapter(this);
             mRecyclerView.setAdapter(adapter);
             adapter.setOnItemClickListener(this);
             adapter.setOnItemLongClickListener(this);
@@ -164,12 +165,12 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
 
     @Override
     protected NavigationView.OnNavigationItemSelectedListener getNavigationItemSelectedListener() {
-        return item -> SlideshowActivity.this.menuItemChecked(item.getItemId());
+        return item -> SlideListActivity.this.menuItemChecked(item.getItemId());
     }
 
     @Override
     protected int[] getMenuItemIds() {
-        return new int[]{R.id.nav_home, R.id.nav_slideshow, R.id.nav_share, R.id.nav_send};
+        return new int[]{R.id.nav_home, R.id.nav_slidelist, R.id.nav_share, R.id.nav_send};
     }
 
     @Override
@@ -178,7 +179,7 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
             case R.id.nav_home:
                 setOnDrawerClosedCallback(() -> MainActivity.startActivity(this));
                 break;
-            case R.id.nav_slideshow:
+            case R.id.nav_slidelist:
 
                 break;
             case R.id.nav_share:
@@ -234,17 +235,17 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
     }
 
     private void setMenuChecked() {
-        mNavigationView.getMenu().findItem(R.id.nav_slideshow).setChecked(true);
+        mNavigationView.getMenu().findItem(R.id.nav_slidelist).setChecked(true);
     }
 
     @Override
     public void onItemClick(View convertView, int position) {
-
+        ToastUtils.showCenter(this, position + "");
     }
 
     @Override
-    public boolean onItemLongClick(View convertView, int position) {
-        return false;
+    public void onItemLongClick(View convertView, int position) {
+
     }
 
     public void setRefreshing(boolean refreshing) {
@@ -254,12 +255,12 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
 
     @Override
     public void showProgress() {
-
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-
+        mProgressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -269,16 +270,11 @@ public class SlideshowActivity extends BaseDrawerLayoutActivity implements Slide
 
     @Override
     public void showMessage(String message) {
-
-    }
-
-    @Override
-    public void addItem(Object obj, int position) {
-
+        ToastUtils.showCenter(this, message);
     }
 
     @Override
     public void onFailure(Throwable e) {
-
+        LogUtils.E(e + "");
     }
 }

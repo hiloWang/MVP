@@ -1,10 +1,10 @@
 package com.user.hilo.presenter;
 
+import com.user.hilo.api.Api;
 import com.user.hilo.core.mvp.BasePresenter;
 import com.user.hilo.interfaces.OnFinishedListener;
 import com.user.hilo.model.MainModel;
 import com.user.hilo.model.i.IMainModel;
-import com.user.hilo.others.Api;
 import com.user.hilo.presenter.i.IMainPresenter;
 import com.user.hilo.utils.CustomDateUtils;
 import com.user.hilo.utils.LogUtils;
@@ -72,7 +72,7 @@ public class MainPresenter extends BasePresenter<MainView> implements IMainPrese
     }
 
     @Override
-    public void onFinished(boolean isLoadmoreData, Observable<List<? extends Object>> items) {
+    public void onFinished(boolean isLoadmoreData, Observable items) {
         if (getMvpView() != null) {
             mCompositeSubscription.add(items.subscribe(new Subscriber<List<? extends Object>>() {
                 @Override

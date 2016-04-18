@@ -189,7 +189,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
      */
     @Override
     protected int[] getMenuItemIds() {
-        return new int[]{R.id.nav_home, R.id.nav_slideshow, R.id.nav_share, R.id.nav_send};
+        return new int[]{R.id.nav_home, R.id.nav_slidelist, R.id.nav_share, R.id.nav_send};
     }
 
     @Override
@@ -197,8 +197,8 @@ public class MainActivity extends BaseDrawerLayoutActivity
         switch (now.getItemId()) {
             case R.id.nav_home:
                 break;
-            case R.id.nav_slideshow:
-                setOnDrawerClosedCallback(() -> SlideshowActivity.startActivity(this));
+            case R.id.nav_slidelist:
+                setOnDrawerClosedCallback(() -> SlideListActivity.startActivity(this));
                 break;
             case R.id.nav_share:
                 ToastUtils.show(this, "nav_share" + now.getItemId(), 1);
@@ -370,7 +370,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     @Override
     public void onItemLongClicked(View view, int position) {
         if (position + 1 == 1) {
-            Intent intent = new Intent(this, SlideshowActivity.class);
+            Intent intent = new Intent(this, SlideListActivity.class);
             startActivity(intent);
         }
     }

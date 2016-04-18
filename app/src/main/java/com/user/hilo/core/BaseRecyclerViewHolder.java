@@ -70,7 +70,10 @@ public class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
         if (listener == null) {
             this.itemView.setOnLongClickListener(null);
         } else {
-            this.itemView.setOnLongClickListener(v -> listener.onItemLongClick(v, position));
+            this.itemView.setOnLongClickListener(v -> {
+                listener.onItemLongClick(v, position);
+                return true;
+            });
         }
     }
 
@@ -101,6 +104,6 @@ public class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
          * @param position    position
          * @return true false
          */
-        boolean onItemLongClick(View convertView, int position);
+        void onItemLongClick(View convertView, int position);
     }
 }

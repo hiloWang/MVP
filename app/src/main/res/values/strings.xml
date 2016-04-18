@@ -22,10 +22,11 @@
     <string name="password_error">密码不能为空</string>
 
     <!-- toolbar title -->
-    <string name="slideshow_toolbar_title">视频专区</string>
+    <string name="slidelist_toolbar_title">视频专区</string>
     <string name="main_toolbar_title">JUSTAPP</string>
     <string name="login_toolbar_title">登录界面</string>
     <string name="daily_android_tag_tv">Android</string>
     <string name="daily_ios_tag_tv">iOS</string>
+    <string name="sldeplayer_toolbar_title">测试Toolbar标题</string>
 
 </resources>
