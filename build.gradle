@@ -16,10 +16,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-		// compile 'com.commonsware.cwac:camera:0.7.+'
-        maven {
-            url "https://repo.commonsware.com.s3.amazonaws.com"
-        }
+        maven { url 'https://s3.amazonaws.com/repo.commonsware.com' }
     }
 }
 

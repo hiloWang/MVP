@@ -21,12 +21,7 @@ public class LoginButton extends ViewAnimator implements View.OnClickListener {
 
     private OnSendClickListener onSendClickListener;
 
-    private Runnable revertStateRunnable = new Runnable() {
-        @Override
-        public void run() {
-            setCurrentState(STATE_SEND);
-        }
-    };
+    private Runnable revertStateRunnable = () -> setCurrentState(STATE_SEND);
 
     public LoginButton(Context context) {
         super(context);
@@ -105,6 +100,6 @@ public class LoginButton extends ViewAnimator implements View.OnClickListener {
     }
 
     public interface OnSendClickListener {
-        public void onSendClickListener(View v);
+        void onSendClickListener(View v);
     }
 }

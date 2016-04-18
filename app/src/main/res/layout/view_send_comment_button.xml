@@ -14,9 +14,9 @@
         android:id="@+id/tvDone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="✓ 验证通过,请稍后..."
-        android:textColor="@color/design_black_disable"
         android:background="#efefef"
-        android:textSize="12sp" />
+        android:gravity="center"
+        android:text="✓"
+        android:textColor="@color/cpb_green"
+        android:textSize="28sp" />
 </merge>

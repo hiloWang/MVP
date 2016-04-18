@@ -8,12 +8,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.user.hilo.MyApplication;
 import com.user.hilo.R;
 import com.user.hilo.core.BaseToolbarActivity;
-import com.user.hilo.interfaces.OnNoDoubleClickListener;
 import com.user.hilo.presenter.LoginPresenter;
-import com.user.hilo.presenter.i.ILoginPresenter;
 import com.user.hilo.view.i.LoginView;
 import com.user.hilo.widget.LoginButton;
 
@@ -34,7 +31,7 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     @Bind(R.id.btnCommit)
     LoginButton mBtnCommit;
 
-    private ILoginPresenter presenter;
+    private LoginPresenter presenter;
 
     @Override
     protected int getLayoutId() {
@@ -45,24 +42,17 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     protected void initViews(Bundle savedInstanceState) {
         toolbar.setNavigationIcon(android.R.color.transparent);
         mActionBarHelper.setTitle(getString(R.string.login_toolbar_title));
-
-        presenter = new LoginPresenter(this);
     }
 
     @Override
     protected void initListeners() {
         mBtnCommit.setOnSendClickListener(this);
-        toolbar.setNavigationOnClickListener(new OnNoDoubleClickListener() {
-            @Override
-            protected void onNoDoubleClickListener(View v) {
-
-            }
-        });
     }
 
     @Override
     protected void initData() {
-
+        presenter = new LoginPresenter();
+        presenter.attachView(this);
     }
 
     @Override
@@ -89,6 +79,7 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
 
     @Override
     protected void onDestroy() {
+        presenter.detachView();
         presenter.onDestroy();
         super.onDestroy();
         System.gc();
@@ -139,7 +130,7 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     public void serverError() {
         mBtnCommit.endCustomAnimation();
         hideProgress();
-        Toast.makeText(MyApplication.mContext, "服务器正在升级,请稍后再试.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "服务器正在升级,请稍后再试.", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -149,5 +140,10 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
 
     private void validationError() {
         mBtnCommit.startAnimation(AnimationUtils.loadAnimation(this, R.anim.shake_error));
+    }
+
+    @Override
+    public void onFailure(Throwable e) {
+
     }
 }

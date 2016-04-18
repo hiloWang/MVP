@@ -8,6 +8,7 @@ import com.frogermcs.androiddevmetrics.AndroidDevMetrics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.leakcanary.LeakCanary;
+import com.user.hilo.BuildConfig;
 import com.user.hilo.others.Api;
 import com.user.hilo.others.Configurations;
 import com.user.hilo.receiver.CrashHandler;

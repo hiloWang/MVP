@@ -107,6 +107,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     protected void initListeners() {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private boolean moveToDown = false;
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 if (loadingMoreData) return;
@@ -159,6 +160,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
 
     /**
      * action bar menu
+     *
      * @param menu
      * @return
      */
@@ -182,6 +184,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
 
     /**
      * nav menu
+     *
      * @return
      */
     @Override
@@ -461,7 +464,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
     }
 
     private void setMenuChecked() {
-       mNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
+        mNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
     }
 
     @Override
@@ -476,6 +479,7 @@ public class MainActivity extends BaseDrawerLayoutActivity
 
     static class DelayHandler extends Handler {
         private WeakReference<MainActivity> mWeakReference;
+
         DelayHandler(MainActivity activity) {
             mWeakReference = new WeakReference<>(activity);
         }

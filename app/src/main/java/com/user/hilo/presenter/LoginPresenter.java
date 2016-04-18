@@ -1,5 +1,6 @@
 package com.user.hilo.presenter;
 
+import com.user.hilo.core.mvp.BasePresenter;
 import com.user.hilo.interfaces.OnLoginFinishedListener;
 import com.user.hilo.model.LoginModel;
 import com.user.hilo.model.i.ILoginModel;
@@ -9,28 +10,22 @@ import com.user.hilo.view.i.LoginView;
 /**
  * Created by Administrator on 2016/3/16.
  */
-public class LoginPresenter implements ILoginPresenter, OnLoginFinishedListener {
+public class LoginPresenter extends BasePresenter<LoginView> implements ILoginPresenter, OnLoginFinishedListener {
 
-    private LoginView mainView;
     private ILoginModel model;
 
-    public LoginPresenter(LoginView mainView) {
-        this.mainView = mainView;
-
+    public LoginPresenter() {
         model = new LoginModel();
     }
 
     @Override
     public void validateCredentials(String username, String password) {
-        if (mainView != null) {
-            model.login(username, password, this);
-        }
+        model.login(username, password, this);
     }
 
     @Override
     public void onDestroy() {
         model.onDestroy();
-        mainView = null;
     }
 
     @Override
@@ -40,25 +35,25 @@ public class LoginPresenter implements ILoginPresenter, OnLoginFinishedListener 
 
     @Override
     public void onPause() {
-        if (mainView != null) {
-            mainView.hideProgress();
+        if (getMvpView() != null) {
+            getMvpView().hideProgress();
         }
     }
 
 
     @Override
     public void onUsernameError() {
-        if (mainView != null) {
-            mainView.setUsernameError();
-            mainView.hideProgress();
+        if (getMvpView() != null) {
+            getMvpView().setUsernameError();
+            getMvpView().hideProgress();
         }
     }
 
     @Override
     public void onPasswordError() {
-        if (mainView != null) {
-            mainView.setPasswordError();
-            mainView.hideProgress();
+        if (getMvpView() != null) {
+            getMvpView().setPasswordError();
+            getMvpView().hideProgress();
         }
     }
 
@@ -66,18 +61,18 @@ public class LoginPresenter implements ILoginPresenter, OnLoginFinishedListener 
     public void validateStatus(int status) {
         switch (status) {
             case LoginModel.VALIDATE_SUCCESS:
-                mainView.showProgress();
+                getMvpView().showProgress();
                 break;
             case LoginModel.SERVER_ERROR:
-                mainView.serverError();
+                getMvpView().serverError();
                 break;
         }
     }
 
     @Override
     public void onSuccess() {
-        if (mainView != null) {
-            mainView.navigateToHome();
+        if (getMvpView() != null) {
+            getMvpView().navigateToHome();
         }
     }
 }
