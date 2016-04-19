@@ -2,7 +2,6 @@ package com.user.hilo.core;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +16,15 @@ import com.user.hilo.utils.ToastUtils;
 public abstract class BaseFragment extends Fragment {
 
     protected View self;
+    private Bundle savedStateBundle;
+    private static final String ARGS_BUNDLE_KEY = "internalSavedViewState8954201239547";
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    /**
+     * Fragment 要有一个默认的构造函数，Fragment在重新创建/还原的时候会调用默认的构造函数，会在重新创建时将状态保存到一个包（Bundle）对象，
+     * 当还原时，将参数包还原到新建的Fragment。该Fragment执行的后续回调能够访问这些参数，可以将碎片还原到上一个状态；
+     */
+    public BaseFragment() {
+        super();
     }
 
     @Override
@@ -33,6 +37,11 @@ public abstract class BaseFragment extends Fragment {
                     "Activity must be implement BaseFragment of callbacks method.");
         }
         mCallbacks = (Callbacks) activity;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -53,22 +62,19 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        // Reset the active callbacks interface to the dummy implementation.
-        mCallbacks = sDummyCallbacks;
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Restore State Here
+        if (!restoreStateFromArguments()) {
+            // First Time, Initialize something here
+            initData();
+        }
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        initData();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        afterResume();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveState2Arguments();
     }
 
     @Override
@@ -78,8 +84,15 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        afterResume();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+        saveState2Arguments();
     }
 
     @Override
@@ -87,6 +100,14 @@ public abstract class BaseFragment extends Fragment {
         beforeDestroy();
         super.onDestroy();
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        // Reset the active callbacks interface to the dummy implementation.
+        mCallbacks = sDummyCallbacks;
+    }
+
 
     protected void afterResume() {
     }
@@ -121,6 +142,54 @@ public abstract class BaseFragment extends Fragment {
      * Initialize the Activity data
      */
     protected abstract void initData();
+
+    /**
+     * 恢复数据回调
+     *
+     * @param savedInstanceState 存储在Arguments里的onSaveState Bundle对象
+     */
+    protected abstract void onRestoreState(Bundle savedInstanceState);
+
+    /**
+     * 保存数据回调
+     *
+     * @param savedInstanceState
+     */
+    protected abstract void onSavedState(Bundle savedInstanceState);
+
+    /**
+     * 保存数据
+     */
+    private void saveState2Arguments() {
+        // 多次屏幕旋转时view会为null，不为空时才存储数据
+        if (getView() != null)
+            savedStateBundle = getSavedStateBundle();
+        if (savedStateBundle != null) {
+            Bundle argsBundle = getArguments();
+            argsBundle.putBundle(ARGS_BUNDLE_KEY, savedStateBundle);
+        }
+    }
+
+    private Bundle getSavedStateBundle() {
+        Bundle initSavedStateBundleData = new Bundle();
+        onSavedState(initSavedStateBundleData);
+        return initSavedStateBundleData;
+    }
+
+    /**
+     * 恢复数据
+     *
+     * @return
+     */
+    private boolean restoreStateFromArguments() {
+        Bundle b = getArguments();
+        savedStateBundle = b.getBundle(ARGS_BUNDLE_KEY);
+        if (savedStateBundle != null) {
+            onRestoreState(savedStateBundle);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Find the view by id
