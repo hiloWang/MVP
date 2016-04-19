@@ -16,6 +16,9 @@ import com.user.hilo.utils.ToastUtils;
 public abstract class BaseFragment extends Fragment {
 
     protected View self;
+    /**
+     * 临时的Bundle对象，用于存储用户的数据，如果用户保存了数据，那么最终将该对象put到arguments的bundle对象中
+     */
     private Bundle savedStateBundle;
     private static final String ARGS_BUNDLE_KEY = "internalSavedViewState8954201239547";
 
@@ -74,7 +77,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        saveState2Arguments();
+        saveState2ArgumentsBundle();
     }
 
     @Override
@@ -92,7 +95,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        saveState2Arguments();
+        saveState2ArgumentsBundle();
     }
 
     @Override
@@ -160,7 +163,7 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 保存数据
      */
-    private void saveState2Arguments() {
+    private void saveState2ArgumentsBundle() {
         // 多次屏幕旋转时view会为null，不为空时才存储数据
         if (getView() != null)
             savedStateBundle = getSavedStateBundle();
@@ -170,6 +173,11 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+    /**
+     * 用于判断用户是否保存数据到临时的bundle对象中，如果返回时临时的Bundle对象不为null，那么会将该bundle存储到Fragment的Arguments的Bundle中;
+     *
+     * @return 临时bundle
+     */
     private Bundle getSavedStateBundle() {
         Bundle initSavedStateBundleData = new Bundle();
         onSavedState(initSavedStateBundleData);
