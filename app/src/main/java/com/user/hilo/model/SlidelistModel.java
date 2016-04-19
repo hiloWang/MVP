@@ -1,6 +1,8 @@
 package com.user.hilo.model;
 
 import com.user.hilo.api.Api;
+import com.user.hilo.bean.DailyBean;
+import com.user.hilo.bean.HomeBean;
 import com.user.hilo.interfaces.OnFinishedListener;
 import com.user.hilo.model.i.ISlidelistModel;
 import com.user.hilo.utils.RxUtils;
@@ -8,6 +10,7 @@ import com.user.hilo.utils.RxUtils;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 
 /**
  * Created by Administrator on 2016/4/17.

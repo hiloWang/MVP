@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.user.hilo.R;
 import com.user.hilo.core.BaseToolbarActivity;
 import com.user.hilo.presenter.LoginPresenter;
+import com.user.hilo.service.KeepingAppAliveService;
 import com.user.hilo.view.i.LoginView;
 import com.user.hilo.widget.LoginButton;
 
@@ -21,6 +22,8 @@ import butterknife.OnClick;
  * Created by Administrator on 2016/3/16.
  */
 public class LoginActivity extends BaseToolbarActivity implements LoginView, LoginButton.OnSendClickListener {
+
+    private Intent innerService;
 
     @Bind(R.id.username)
     EditText mUsername;
@@ -40,6 +43,7 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        startGrayInnerService();
         toolbar.setNavigationIcon(android.R.color.transparent);
         mActionBarHelper.setTitle(getString(R.string.login_toolbar_title));
     }
@@ -146,4 +150,10 @@ public class LoginActivity extends BaseToolbarActivity implements LoginView, Log
     public void onFailure(Throwable e) {
 
     }
+
+    private void startGrayInnerService() {
+        innerService = new Intent(this, KeepingAppAliveService.class);
+        startService(innerService);
+    }
+
 }

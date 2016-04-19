@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.user.hilo.R;
+import com.user.hilo.service.KeepingAppAliveService;
 import com.user.hilo.utils.ToastUtils;
 
 import butterknife.ButterKnife;

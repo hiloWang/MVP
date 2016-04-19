@@ -18,6 +18,9 @@ import com.user.hilo.utils.ToastUtils;
 
 import java.util.Date;
 
+import rx.Observable;
+import rx.Subscriber;
+
 /**
  * Created by Administrator on 2016/4/17.
  */
@@ -89,6 +92,7 @@ public class SlidelistAdapter extends BaseRecyclerViewAdapter {
             protected void onNoDoubleClickListener(View v) {
                 Picasso.with(context)
                         .load(dailyBean.getPicUrl()).into(mDailyIv);
+
             }
         });
     }
