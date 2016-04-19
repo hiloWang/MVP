@@ -34,12 +34,9 @@ public abstract class BaseNoXmlToolbarActivity extends BaseAppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                overridePendingTransition(0, R.anim.activity_swipeback_ac_right_out);
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+            overridePendingTransition(0, R.anim.activity_swipeback_ac_right_out);
         });
     }
 

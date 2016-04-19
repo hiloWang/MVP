@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-
 @SuppressLint("SimpleDateFormat")
 public class DateUtils {
 

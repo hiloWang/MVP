@@ -29,11 +29,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
 
-/**
- * Description：ToastUtil
- * Created by：CaMnter
- * Time：2015-12-14 23:01
- */
 public class ToastUtils {
 
     public static final long DEFAULT_DURATION = 1000L;

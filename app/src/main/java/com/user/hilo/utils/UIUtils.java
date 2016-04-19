@@ -30,11 +30,6 @@ import android.view.animation.AlphaAnimation;
 
 import java.util.Locale;
 
-/**
- * Class containing some static utility methods.
- * <p>
- * Created by neokree on 06/01/15.
- */
 public class UIUtils {
     private UIUtils() {
     }

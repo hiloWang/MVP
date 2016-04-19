@@ -3,9 +3,7 @@ package com.user.hilo.utils;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 
-/**
- * Created by hilo on 16/2/24.
- */
+
 public class UtilTool {
 
     public static void appLogout(Context context) {
